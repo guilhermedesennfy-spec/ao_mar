@@ -99,43 +99,32 @@ function ajustarCanvas() {
 }
 
 
+let destinoToque = null;
+
 function configurarControles() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    let destinoToque = null;
 
     if (isTouchDevice) {
-        document.addEventListener("touchstart", function(event) {
-            const touch = event.touches[0];
+        document.addEventListener("touchstart", atualizarDestino);
+        document.addEventListener("touchmove", atualizarDestino);
+    } else {
+        document.addEventListener("mousemove", function(event) {
             const canvasRect = document.getElementById("canvas").getBoundingClientRect();
             destinoToque = {
-                x: touch.clientX - canvasRect.left,
-                y: touch.clientY - canvasRect.top
+                x: event.clientX - canvasRect.left,
+                y: event.clientY - canvasRect.top
             };
         });
-
-        document.addEventListener("touchmove", function(event) {
-            const touch = event.touches[0];
-            const canvasRect = document.getElementById("canvas").getBoundingClientRect();
-            destinoToque = {
-                x: touch.clientX - canvasRect.left,
-                y: touch.clientY - canvasRect.top
-        };
-    });
-} else {
-        document.addEventListener("mousemove", function(event) {
-            gaivota.move_gaivota(event.clientX, event.clientY);
-        });
     }
-    if (destinoToque) {
-        const suavidade = 0.1; // Quanto menor, mais suave
-        const dx = destinoToque.x - gaivota.position[0];
-        const dy = destinoToque.y - gaivota.position[1];
+}
 
-        gaivota.move_gaivota(
-            gaivota.position[0] + dx * suavidade,
-            gaivota.position[1] + dy * suavidade
-        );
-    }
+function atualizarDestino(event) {
+    const touch = event.touches[0];
+    const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+    destinoToque = {
+        x: touch.clientX - canvasRect.left,
+        y: touch.clientY - canvasRect.top
+    };
 }
 
 
@@ -202,6 +191,17 @@ function jogo() {
     gaivota2.anim('img_gaivota2/gaivota', 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
     //configurarControles();
+    if (destinoToque) {
+        const suavidade = 0.1;
+        const dx = destinoToque.x - gaivota.position[0];
+        const dy = destinoToque.y - gaivota.position[1];
+
+        gaivota.move_gaivota(
+            gaivota.position[0] + dx * suavidade,
+            gaivota.position[1] + dy * suavidade
+        );
+    }
+
 
 
     if (gaivota.pontos <= 10) gaivota.pontos += 1;
