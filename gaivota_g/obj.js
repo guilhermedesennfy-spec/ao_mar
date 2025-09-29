@@ -130,7 +130,7 @@ console.log(placar)
 
 ajustarCanvas();
 //configurarControles();
-//window.addEventListener("resize", ajustarCanvas);
+window.addEventListener("resize", ajustarCanvas);
 
 //function jogo(){
     
@@ -168,7 +168,7 @@ ajustarCanvas();
 //}
 function jogo() {
     //ajustarCanvas();
-    window.addEventListener("resize", ajustarCanvas);
+    //window.addEventListener("resize", ajustarCanvas);
     
     bg.drawing();
     bg2.drawing();
