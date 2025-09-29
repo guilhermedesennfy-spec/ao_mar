@@ -120,15 +120,15 @@ function configurarControles() {
 
 
 var bg = new Obj('img_fundo/fundo2.png',0,0);
-var bg2 = new Obj('img_fundo/fundo2.png',window.innerWidth,0);
-var gaivota =new Obj('img_gaivota/gaivota1.png',0.13*window.innerWidth,200);
-var gaivota2 =new Obj('img_gaivota2/gaivota1.png',0.26*window.innerWidth,200;
+var bg2 = new Obj('img_fundo/fundo2.png',744,0);
+var gaivota =new Obj('img_gaivota/gaivota1.png',100,200);
+var gaivota2 =new Obj('img_gaivota2/gaivota1.png',400,200;
 var peixe =new Obj("img_peixe/peixe1.png",1.1*744*Math.random(),742);
 
 var placar = document.querySelector('h3');
 console.log(placar)
 
-//ajustarCanvas();
+ajustarCanvas();
 //configurarControles();
 //window.addEventListener("resize", ajustarCanvas);
 
@@ -167,7 +167,7 @@ console.log(placar)
 
 //}
 function jogo() {
-    ajustarCanvas();
+    //ajustarCanvas();
     window.addEventListener("resize", ajustarCanvas);
     
     bg.drawing();
@@ -180,6 +180,7 @@ function jogo() {
     gaivota.anim('img_gaivota/gaivota', 4, 6);
     gaivota2.anim('img_gaivota2/gaivota', 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
+    configurarControles();
 
     if (gaivota.pontos <= 10) gaivota.pontos += 12;
 
@@ -192,7 +193,7 @@ function jogo() {
     }
 
     if (gaivota.pontos <= 10) gaivota.pontos -= 12;
-    configurarControles();
+    
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
 
