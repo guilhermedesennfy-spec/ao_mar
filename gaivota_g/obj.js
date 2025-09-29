@@ -51,17 +51,17 @@ function Obj(image,x,y){
     }
 }
 function move_bg(bg,bg2){
-    if (bg.position[0]>-773){
+    if (bg.position[0]>-window.innerWidth){
         bg.position[0] -=1
     }
-    if (bg.position[0]==-773){
+    if (bg.position[0]==-window.innerWidth){
         bg.position[0]=0;
     }
     if (bg2.position[0]>0){
         bg2.position[0] -=1
     }
     if (bg2.position[0]==0){
-        bg2.position[0]=774;
+        bg2.position[0]=window.innerWidth;
     }
     
 }
@@ -120,10 +120,10 @@ function configurarControles() {
 
 
 var bg = new Obj('img_fundo/fundo2.png',0,0);
-var bg2 = new Obj('img_fundo/fundo2.png',774,0);
-var gaivota =new Obj('img_gaivota/gaivota1.png',100,200);
-var gaivota2 =new Obj('img_gaivota2/gaivota1.png',400,200);
-var peixe =new Obj("img_peixe/peixe1.png",774*Math.random(),750);
+var bg2 = new Obj('img_fundo/fundo2.png',window.innerWidth,0);
+var gaivota =new Obj('img_gaivota/gaivota1.png',0.13*window.innerWidth,0.27*window.innerHeight);
+var gaivota2 =new Obj('img_gaivota2/gaivota1.png',0.26*window.innerWidth,0.27*window.innerHeight);
+var peixe =new Obj("img_peixe/peixe1.png",1.1*window.innerWidth*Math.random(),1.2*window.innerHeight);
 
 var placar = document.querySelector('h3');
 console.log(placar)
