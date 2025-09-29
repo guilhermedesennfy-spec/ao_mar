@@ -101,16 +101,16 @@ function configurarControles() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     if (isTouchDevice) {
-        let lastTouch = null;
         document.addEventListener("touchmove", function(event) {
-            const touch = event.touches[0];
-            if (lastTouch) {
-                const deltaX = touch.clientX - lastTouch.clientX;
-                const deltaY = touch.clientY - lastTouch.clientY;
-                gaivota.move_gaivota(gaivota.position[0] + deltaX*0.01, gaivota.position[1] - deltaY*0.01);
-            }
-            lastTouch = touch;
-        });
+        const touch = event.touches[0];
+        const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+
+        
+        const x = touch.clientX - canvasRect.left;
+        const y = touch.clientY - canvasRect.top;
+
+        gaivota.move_gaivota(x, y);
+    });
     } else {
         document.addEventListener("mousemove", function(event) {
             gaivota.move_gaivota(event.clientX, event.clientY);
