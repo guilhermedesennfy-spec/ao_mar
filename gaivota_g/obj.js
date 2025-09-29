@@ -92,6 +92,31 @@ function move_peixe(peixe,gaivota,gaivota2){
     
 
 }
+function ajustarCanvas() {
+    const canvas = document.getElementById("canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+function configurarControles() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (isTouchDevice) {
+        let lastTouch = null;
+        document.addEventListener("touchmove", function(event) {
+            const touch = event.touches[0];
+            if (lastTouch) {
+                const deltaX = touch.clientX - lastTouch.clientX;
+                const deltaY = touch.clientY - lastTouch.clientY;
+                gaivota.move_gaivota(gaivota.position[0] + deltaX, gaivota.position[1] + deltaY);
+            }
+            lastTouch = touch;
+        });
+    } else {
+        document.addEventListener("mousemove", function(event) {
+            gaivota.move_gaivota(event.clientX, event.clientY);
+        });
+    }
+}
 
 
 var bg = new Obj('img_fundo/fundo2.png',0,0);
@@ -103,38 +128,71 @@ var peixe =new Obj("img_peixe/peixe1.png",774*Math.random(),750);
 var placar = document.querySelector('h3');
 console.log(placar)
 
-function jogo(){
+ajustarCanvas();
+configurarControles();
+window.addEventListener("resize", ajustarCanvas);
+
+//function jogo(){
     
+//    bg.drawing();
+//    bg2.drawing();
+//    gaivota.drawing();
+//    gaivota2.drawing();
+//    peixe.drawing();
+//    move_bg(bg,bg2);
+//    gaivota.anim('img_gaivota/gaivota',4,6);
+//    gaivota2.anim('img_gaivota2/gaivota',4,6);
+//   peixe.anim("img_peixe/peixe",6,6);
+
+//   document.addEventListener("mousemove",function(event){
+//        x = event.x;
+//        y = event.y;
+//        gaivota.move_gaivota(x,y);
+//    })
+//    var x =gaivota.pontos;
+//    if(gaivota.pontos <=10){
+//       gaivota.pontos +=12;
+//    }
+    
+//    if (peixe.position[1]<=560){
+//        gaivota2.move_gaivota2((peixe.position[0]-gaivota2.position[0])*(0.0015+(gaivota.pontos+gaivota2.pontos)/3500+(degrau((gaivota.pontos+gaivota2.pontos/2))*(Math.abs(gaivota.pontos-gaivota2.pontos)))/100)+gaivota2.position[0],(peixe.position[1]-gaivota2.position[1])*(0.0002+(gaivota.pontos+gaivota2.pontos)/2000)+gaivota2.position[1])
+
+//    }
+//   if(x <=10){
+//        gaivota.pontos -=12;
+//    }
+//    move_peixe(peixe,gaivota,gaivota2);
+//    placar.textContent ="pontos Gaivota1 : "+gaivota.pontos + "  pontos Gaivota2 : "+gaivota2.pontos;
+//    requestAnimationFrame(jogo);
+
+//}
+function jogo() {
     bg.drawing();
     bg2.drawing();
     gaivota.drawing();
     gaivota2.drawing();
     peixe.drawing();
-    move_bg(bg,bg2);
-    gaivota.anim('img_gaivota/gaivota',4,6);
-    gaivota2.anim('img_gaivota2/gaivota',4,6);
-    peixe.anim("img_peixe/peixe",6,6);
 
-    document.addEventListener("mousemove",function(event){
-        x = event.x;
-        y = event.y;
-        gaivota.move_gaivota(x,y);
-    })
-    var x =gaivota.pontos;
-    if(gaivota.pontos <=10){
-        gaivota.pontos +=12;
-    }
-    
-    if (peixe.position[1]<=560){
-        gaivota2.move_gaivota2((peixe.position[0]-gaivota2.position[0])*(0.0015+(gaivota.pontos+gaivota2.pontos)/3500+(degrau((gaivota.pontos+gaivota2.pontos/2))*(Math.abs(gaivota.pontos-gaivota2.pontos)))/100)+gaivota2.position[0],(peixe.position[1]-gaivota2.position[1])*(0.0002+(gaivota.pontos+gaivota2.pontos)/2000)+gaivota2.position[1])
+    move_bg(bg, bg2);
+    gaivota.anim('img_gaivota/gaivota', 4, 6);
+    gaivota2.anim('img_gaivota2/gaivota', 4, 6);
+    peixe.anim("img_peixe/peixe", 6, 6);
 
+    if (gaivota.pontos <= 10) gaivota.pontos += 12;
+
+    if (peixe.position[1] <= 560) {
+        const dx = peixe.position[0] - gaivota2.position[0];
+        const dy = peixe.position[1] - gaivota2.position[1];
+        const fatorX = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500 + (degrau((gaivota.pontos + gaivota2.pontos / 2)) * Math.abs(gaivota.pontos - gaivota2.pontos)) / 100;
+        const fatorY = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
+        gaivota2.move_gaivota2(dx * fatorX + gaivota2.position[0], dy * fatorY + gaivota2.position[1]);
     }
-    if(x <=10){
-        gaivota.pontos -=12;
-    }
-    move_peixe(peixe,gaivota,gaivota2);
-    placar.textContent ="pontos Gaivota1 : "+gaivota.pontos + "  pontos Gaivota2 : "+gaivota2.pontos;
+
+    if (gaivota.pontos <= 10) gaivota.pontos -= 12;
+
+    move_peixe(peixe, gaivota, gaivota2);
+    placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
+
     requestAnimationFrame(jogo);
-
 }
 jogo()
