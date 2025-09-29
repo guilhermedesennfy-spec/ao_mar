@@ -51,14 +51,14 @@ function Obj(image,x,y){
     }
 }
 function move_bg(bg,bg2){
-    if (bg.position[0]>-window.innerWidth){
-        bg.position[0] -=1
+    if (bg.position[0]>=-window.innerWidth){
+        bg.position[0] -=1;
     }
     if (bg.position[0]==-window.innerWidth){
         bg.position[0]=0;
     }
-    if (bg2.position[0]>0){
-        bg2.position[0] -=1
+    if (bg2.position[0]>=0){
+        bg2.position[0] -=1;
     }
     if (bg2.position[0]==0){
         bg2.position[0]=window.innerWidth;
@@ -107,7 +107,7 @@ function configurarControles() {
             if (lastTouch) {
                 const deltaX = touch.clientX - lastTouch.clientX;
                 const deltaY = touch.clientY - lastTouch.clientY;
-                gaivota.move_gaivota(gaivota.position[0] + deltaX, gaivota.position[1] + deltaY);
+                gaivota.move_gaivota(gaivota.position[0] + deltaX*0.01, gaivota.position[1] - deltaY*0.01);
             }
             lastTouch = touch;
         });
