@@ -204,7 +204,7 @@ function jogo() {
 
 
 
-    if (gaivota.pontos <= 10) gaivota.pontos += 1;
+    if (gaivota.pontos <= 10) gaivota.pontos += 12;
 
     if (peixe.position[1] <= 560) {
         const dx = peixe.position[0] - gaivota2.position[0];
