@@ -97,21 +97,40 @@ function ajustarCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
+if (destinoToque) {
+    const suavidade = 0.1; // Quanto menor, mais suave
+    const dx = destinoToque.x - gaivota.position[0];
+    const dy = destinoToque.y - gaivota.position[1];
+
+    gaivota.move_gaivota(
+        gaivota.position[0] + dx * suavidade,
+        gaivota.position[1] + dy * suavidade
+    );
+}
+
 function configurarControles() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    let destinoToque = null;
 
     if (isTouchDevice) {
+        document.addEventListener("touchstart", function(event) {
+            const touch = event.touches[0];
+            const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+            destinoToque = {
+                x: touch.clientX - canvasRect.left,
+                y: touch.clientY - canvasRect.top
+            };
+        });
+
         document.addEventListener("touchmove", function(event) {
-        const touch = event.touches[0];
-        const canvasRect = document.getElementById("canvas").getBoundingClientRect();
-
-        
-        const x = touch.clientX - canvasRect.left;
-        const y = touch.clientY - canvasRect.top;
-
-        gaivota.move_gaivota(x, y);
+            const touch = event.touches[0];
+            const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+            destinoToque = {
+                x: touch.clientX - canvasRect.left,
+                y: touch.clientY - canvasRect.top
+        };
     });
-    } else {
+} else {
         document.addEventListener("mousemove", function(event) {
             gaivota.move_gaivota(event.clientX, event.clientY);
         });
