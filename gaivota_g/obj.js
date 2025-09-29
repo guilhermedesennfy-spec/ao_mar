@@ -51,17 +51,17 @@ function Obj(image,x,y){
     }
 }
 function move_bg(bg,bg2){
-    if (bg.position[0]>=-window.innerWidth){
+    if (bg.position[0]>=-744){
         bg.position[0] -=1;
     }
-    if (bg.position[0]==-window.innerWidth){
+    if (bg.position[0]==-744){
         bg.position[0]=0;
     }
     if (bg2.position[0]>=0){
         bg2.position[0] -=1;
     }
     if (bg2.position[0]==0){
-        bg2.position[0]=window.innerWidth;
+        bg2.position[0]=744;
     }
     
 }
@@ -121,16 +121,16 @@ function configurarControles() {
 
 var bg = new Obj('img_fundo/fundo2.png',0,0);
 var bg2 = new Obj('img_fundo/fundo2.png',window.innerWidth,0);
-var gaivota =new Obj('img_gaivota/gaivota1.png',0.13*window.innerWidth,0.27*window.innerHeight);
-var gaivota2 =new Obj('img_gaivota2/gaivota1.png',0.26*window.innerWidth,0.27*window.innerHeight);
-var peixe =new Obj("img_peixe/peixe1.png",1.1*window.innerWidth*Math.random(),1.2*window.innerHeight);
+var gaivota =new Obj('img_gaivota/gaivota1.png',0.13*window.innerWidth,200);
+var gaivota2 =new Obj('img_gaivota2/gaivota1.png',0.26*window.innerWidth,200;
+var peixe =new Obj("img_peixe/peixe1.png",1.1*744*Math.random(),742);
 
 var placar = document.querySelector('h3');
 console.log(placar)
 
-ajustarCanvas();
-configurarControles();
-window.addEventListener("resize", ajustarCanvas);
+//ajustarCanvas();
+//configurarControles();
+//window.addEventListener("resize", ajustarCanvas);
 
 //function jogo(){
     
@@ -167,6 +167,9 @@ window.addEventListener("resize", ajustarCanvas);
 
 //}
 function jogo() {
+    ajustarCanvas();
+    window.addEventListener("resize", ajustarCanvas);
+    
     bg.drawing();
     bg2.drawing();
     gaivota.drawing();
@@ -189,7 +192,7 @@ function jogo() {
     }
 
     if (gaivota.pontos <= 10) gaivota.pontos -= 12;
-
+    configurarControles();
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
 
