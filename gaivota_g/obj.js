@@ -172,6 +172,7 @@ function jogo() {
     
     bg.drawing();
     bg2.drawing();
+    
     gaivota.drawing();
     gaivota2.drawing();
     peixe.drawing();
@@ -180,7 +181,7 @@ function jogo() {
     gaivota.anim('img_gaivota/gaivota', 4, 6);
     gaivota2.anim('img_gaivota2/gaivota', 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
-    configurarControles();
+    //configurarControles();
 
     if (gaivota.pontos <= 10) gaivota.pontos += 12;
 
