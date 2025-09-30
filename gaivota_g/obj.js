@@ -94,8 +94,8 @@ function move_peixe(peixe,gaivota,gaivota2){
 }
 function ajustarCanvas() {
     const canvas = document.getElementById("canvas");
-    canvas.width = 744;//window.innerWidth
-    canvas.height = 742;//window.innerHeight
+    canvas.width = window.innerWidth;//744;//window.innerWidth
+    canvas.height = window.innerHeight;//742;//window.innerHeight
 }
 
 
