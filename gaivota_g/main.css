@@ -16,3 +16,17 @@ canvas {
     left: 0;
     background: #000;
 }
+
+h3 {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    color: white;
+    font-size: 1.2em;
+    font-family: sans-serif;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 16px;
+    border-radius: 8px;
+}
