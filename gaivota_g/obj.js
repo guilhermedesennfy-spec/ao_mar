@@ -92,11 +92,11 @@ function move_peixe(peixe,gaivota,gaivota2){
     
 
 }
-function ajustarCanvas() {
-    const canvas = document.getElementById("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
+//function ajustarCanvas() {
+//    const canvas = document.getElementById("canvas");
+//    canvas.width = window.innerWidth;
+//    canvas.height = window.innerHeight;
+//}
 
 
 let destinoToque = null;
