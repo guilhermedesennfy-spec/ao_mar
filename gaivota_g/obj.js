@@ -138,7 +138,7 @@ gaivota.pontos=0;
 var placar = document.querySelector('h3');
 console.log(placar)
 
-ajustarCanvas();
+//ajustarCanvas();
 configurarControles();
 window.addEventListener("resize", ajustarCanvas);
 
@@ -226,6 +226,7 @@ function jogo() {
     
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
+    ctx.clearRect(0, O, canvas.width, canvas.height);
 
     requestAnimationFrame(jogo);
 }
