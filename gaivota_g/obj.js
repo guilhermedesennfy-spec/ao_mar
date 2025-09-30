@@ -111,8 +111,8 @@ function configurarControles() {
         document.addEventListener("mousemove", function(event) {
             const canvasRect = document.getElementById("canvas").getBoundingClientRect();
             destinoToque = {
-                x: event.clientX - canvasRect.left,
-                y: event.clientY - canvasRect.top
+                x: event.clientX ,
+                y: event.clientY 
             };
         });
     }
@@ -195,7 +195,7 @@ function jogo() {
 
 
 
-    if (gaivota.pontos <= 10) gaivota.pontos += 12;
+    //if (gaivota.pontos <= 10) gaivota.pontos += 12;
 
     if (peixe.position[1] <= 560) {
         const dx = peixe.position[0] - gaivota2.position[0];
@@ -205,10 +205,10 @@ function jogo() {
         gaivota2.move_gaivota2(dx * fatorX + gaivota2.position[0], dy * fatorY + gaivota2.position[1]);
     }
 
-    if (gaivota.pontos <= 10) gaivota.pontos -= 12;
+    //if (gaivota.pontos <= 10) gaivota.pontos -= 12;
     
     if (destinoToque) {
-        const suavidade = 0.1;
+        const suavidade = 0.2;
         const dx = destinoToque.x - gaivota.position[0];
         const dy = destinoToque.y - gaivota.position[1];
 
