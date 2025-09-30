@@ -226,7 +226,7 @@ function jogo() {
     
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
-    ctx.clearRect(0, O, canvas.width, canvas.height);
+    //ctx.clearRect(0, O, canvas.width, canvas.height);
 
     requestAnimationFrame(jogo);
 }
