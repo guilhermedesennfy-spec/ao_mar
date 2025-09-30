@@ -111,8 +111,8 @@ function configurarControles() {
         document.addEventListener("mousemove", function(event) {
             const canvasRect = document.getElementById("canvas").getBoundingClientRect();
             destinoToque = {
-                x: event.clientX ,
-                y: event.clientY 
+                x: event.clientX + canvasRect.left,
+                y: event.clientY + canvasRect.top
             };
         });
     }
@@ -126,6 +126,7 @@ function atualizarDestino(event) {
         y: touch.clientY - canvasRect.top
     };
 }
+
 
 
 var bg = new Obj('img_fundo/fundo2.png',0,0);
