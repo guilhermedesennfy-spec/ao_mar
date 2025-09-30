@@ -77,12 +77,12 @@ function move_peixe(peixe,gaivota,gaivota2){
     }
     if(((gaivota.position[0]>peixe.position[0]-36 && gaivota.position[0]<peixe.position[0]+36)&&(gaivota.position[1]>peixe.position[1]-36 && gaivota.position[1]<peixe.position[1]+36))){
         peixe.position[0] =800*Math.random()
-        peixe.position[1] =750
+        peixe.position[1] =700
         gaivota.pontos +=1;
     }
     if(((gaivota2.position[0]>peixe.position[0]-36 && gaivota2.position[0]<peixe.position[0]+36)&&(gaivota2.position[1]>peixe.position[1]-36 && gaivota2.position[1]<peixe.position[1]+36))){
         peixe.position[0] =800*Math.random()
-        peixe.position[1] =750
+        peixe.position[1] =700
         gaivota2.pontos +=1;
 
     }
@@ -226,7 +226,7 @@ function jogo() {
     
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
-    ctx.clearRect(0, O, canvas.width, canvas.height);
+    //ctx.clearRect(0, O, canvas.width, canvas.height);
 
     requestAnimationFrame(jogo);
 }
