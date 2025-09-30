@@ -133,7 +133,7 @@ var bg2 = new Obj('img_fundo/fundo2.png',744,0);
 var gaivota =new Obj('img_gaivota/gaivota1.png',100,200);
 var gaivota2 =new Obj('img_gaivota2/gaivota1.png',400,200);
 var peixe =new Obj("img_peixe/peixe1.png",1.1*744*Math.random(),742);
-
+gaivota.pontos=0;
 var placar = document.querySelector('h3');
 console.log(placar)
 
