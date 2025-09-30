@@ -72,7 +72,7 @@ function move_peixe(peixe,gaivota,gaivota2){
     peixe.position[1] -= this.velocidade
     if (peixe.position[1]<=0 ){
         peixe.position[0] =800*Math.random()
-        peixe.position[1] =750
+        peixe.position[1] =720
 
     }
     if(((gaivota.position[0]>peixe.position[0]-36 && gaivota.position[0]<peixe.position[0]+36)&&(gaivota.position[1]>peixe.position[1]-36 && gaivota.position[1]<peixe.position[1]+36))){
@@ -176,6 +176,10 @@ window.addEventListener("resize", ajustarCanvas);
 //    requestAnimationFrame(jogo);
 
 //}
+document.addEventListener("touchmove", function(e) {
+    e.preventDefault();
+}, { passive: false });
+
 function jogo() {
     //ajustarCanvas();
     //window.addEventListener("resize", ajustarCanvas);
