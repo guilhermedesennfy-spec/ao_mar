@@ -191,16 +191,7 @@ function jogo() {
     gaivota2.anim('img_gaivota2/gaivota', 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
     //configurarControles();
-    if (destinoToque) {
-        const suavidade = 0.1;
-        const dx = destinoToque.x - gaivota.position[0];
-        const dy = destinoToque.y - gaivota.position[1];
 
-        gaivota.move_gaivota(
-            gaivota.position[0] + dx * suavidade,
-            gaivota.position[1] + dy * suavidade
-        );
-    }
 
 
 
@@ -215,6 +206,18 @@ function jogo() {
     }
 
     if (gaivota.pontos <= 10) gaivota.pontos -= 12;
+    
+    if (destinoToque) {
+        const suavidade = 0.1;
+        const dx = destinoToque.x - gaivota.position[0];
+        const dy = destinoToque.y - gaivota.position[1];
+
+        gaivota.move_gaivota(
+            gaivota.position[0] + dx * suavidade,
+            gaivota.position[1] + dy * suavidade
+        );
+    }
+    
     
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
