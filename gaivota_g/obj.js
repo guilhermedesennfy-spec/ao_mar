@@ -156,7 +156,7 @@ function ajustarCanvas() {
         canvas._buffer = buffer;
         canvas._bufferCtx = buffer.getContext("2d");
 
-        // Limpa o buffer no início
+        
         canvas._bufferCtx.fillStyle = "black";
         canvas._bufferCtx.fillRect(0, 0, buffer.width, buffer.height);
     } else {
@@ -374,7 +374,7 @@ function jogo() {
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.translate(canvas.width, 0);
-    ctx.rotate(Math.PI / 2);
+    //ctx.rotate(Math.PI / 2);
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
     }
