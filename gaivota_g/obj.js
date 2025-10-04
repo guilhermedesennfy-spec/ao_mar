@@ -117,12 +117,35 @@ function move_peixe(peixe,gaivota,gaivota2){
 //    canvas.height = window.innerHeight;//742;//window.innerHeight
 //    canv.setTransform(0, 1, -1, 0, canvas.height, 0);
 //}
+//function ajustarCanvas() {
+//    const canvas = document.getElementById("canvas");
+//    const ctx = canvas.getContext("2d");
+
+//    if (isMobile) {
+        
+ //       const buffer = document.createElement("canvas");
+ //       buffer.width = window.innerHeight;
+ //       buffer.height = window.innerWidth;
+ //       canvas.width = buffer.height;
+ //       canvas.height = buffer.width;
+
+ //       canvas._ctx = ctx;
+ //       canvas._buffer = buffer;
+ //       canvas._bufferCtx = buffer.getContext("2d");
+  //  } else {
+  //      canvas.width = window.innerWidth;
+ //       canvas.height = window.innerHeight;
+  //      canvas._ctx = ctx;
+  //      canvas._buffer = canvas;
+  //      canvas._bufferCtx = ctx;
+  //  }
+//}
+
 function ajustarCanvas() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
     if (isMobile) {
-        
         const buffer = document.createElement("canvas");
         buffer.width = window.innerHeight;
         buffer.height = window.innerWidth;
@@ -132,6 +155,10 @@ function ajustarCanvas() {
         canvas._ctx = ctx;
         canvas._buffer = buffer;
         canvas._bufferCtx = buffer.getContext("2d");
+
+        // Limpa o buffer no início
+        canvas._bufferCtx.fillStyle = "black";
+        canvas._bufferCtx.fillRect(0, 0, buffer.width, buffer.height);
     } else {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -140,6 +167,7 @@ function ajustarCanvas() {
         canvas._bufferCtx = ctx;
     }
 }
+
 
 
 
@@ -274,6 +302,10 @@ window.addEventListener("resize", ajustarCanvas);
 //}, { passive: false });
 
 function jogo() {
+    if (isMobile) {
+    canvas._bufferCtx.clearRect(0, 0, canvas._buffer.width, canvas._buffer.height);
+    }
+
     //ativarFullscreen();
 
     //ajustarCanvas();
@@ -328,6 +360,15 @@ function jogo() {
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
     //ctx.clearRect(0, O, canvas.width, canvas.height);
+    //if (isMobile) {
+    //const ctx = canvas._ctx;
+    //ctx.save();
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.translate(canvas.width, 0);
+    //ctx.rotate(Math.PI / 2);
+    //ctx.drawImage(canvas._buffer, 0, 0);
+    //ctx.restore();
+    //}
     if (isMobile) {
     const ctx = canvas._ctx;
     ctx.save();
@@ -337,6 +378,7 @@ function jogo() {
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
     }
+
 
 
 
