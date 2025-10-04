@@ -1,4 +1,3 @@
-
 window.addEventListener("load", () => {
   const canvas = document.getElementById("canvas");
   const placar = document.querySelector("h3");
@@ -11,13 +10,16 @@ window.addEventListener("load", () => {
     return Math.exp(k) * 1.8801;
   }
 
-  // Converte coords de toque (visível) para coords do buffer (não rotacionado)
+  
   function converterCoordenadas(vx, vy) {
     if (!isMobile) return { x: vx, y: vy };
-    // buffer.height = largura visível
-    // u = buffer.height - vy; v = vx
+    // para rotação de 90° anti-horário:
+    // display_x = buffer_y
+    // display_y = buffer_width - buffer_x
+    // então buffer_x = buffer_width - display_y, buffer_y = display_x
+    const bw = canvas._buffer.width;
     return {
-      x: canvas._buffer.height - vy,
+      x: bw - vy,
       y: vx
     };
   }
@@ -26,7 +28,6 @@ window.addEventListener("load", () => {
   function Obj(src, x, y) {
     const img = new Image();
     img.src = src;
-
     this.image = img;
     this.position = [x, y];
     this.frame = 1;
@@ -38,7 +39,6 @@ window.addEventListener("load", () => {
       const ctxBuf = canvas._bufferCtx;
       const scaleX = canvas._buffer.width / 744;
       const scaleY = canvas._buffer.height / 742;
-
       ctxBuf.drawImage(
         this.image,
         this.position[0] * scaleX,
@@ -48,9 +48,9 @@ window.addEventListener("load", () => {
       );
     };
 
-    this.anim = (base, tickMax, frames) => {
+    this.anim = (base, tMax, frames) => {
       this.tick += 1;
-      if (this.tick === tickMax) {
+      if (this.tick === tMax) {
         this.tick = 0;
         this.frame = this.frame === frames ? 1 : this.frame + 1;
         this.image.src = `${base}${this.frame}.png`;
@@ -71,7 +71,6 @@ window.addEventListener("load", () => {
   function move_bg(bg, bg2) {
     if (bg.position[0] >= -744) bg.position[0] -= 1;
     else bg.position[0] = 0;
-
     if (bg2.position[0] >= 0) bg2.position[0] -= 1;
     else bg2.position[0] = 744;
   }
@@ -85,14 +84,11 @@ window.addEventListener("load", () => {
       peixe.position[1] = 700;
     }
 
-    function colisao(g) {
-      return (
-        g.position[0] > peixe.position[0] - 36 &&
-        g.position[0] < peixe.position[0] + 36 &&
-        g.position[1] > peixe.position[1] - 36 &&
-        g.position[1] < peixe.position[1] + 36
-      );
-    }
+    const colisao = g =>
+      g.position[0] > peixe.position[0] - 36 &&
+      g.position[0] < peixe.position[0] + 36 &&
+      g.position[1] > peixe.position[1] - 36 &&
+      g.position[1] < peixe.position[1] + 36;
 
     if (colisao(g1)) {
       g1.pontos += 1;
@@ -104,7 +100,6 @@ window.addEventListener("load", () => {
       peixe.position[0] = 800 * Math.random();
       peixe.position[1] = 700;
     }
-
     if (vel >= 15) peixe.x += 1;
   }
 
@@ -112,12 +107,10 @@ window.addEventListener("load", () => {
     const ctx = canvas.getContext("2d");
     if (isMobile) {
       const buffer = document.createElement("canvas");
-      buffer.width = window.innerHeight;
-      buffer.height = window.innerWidth;
-
+      buffer.width = window.innerWidth;
+      buffer.height = window.innerHeight;
       canvas.width = buffer.height;
       canvas.height = buffer.width;
-
       canvas._ctx = ctx;
       canvas._buffer = buffer;
       canvas._bufferCtx = buffer.getContext("2d");
@@ -135,10 +128,10 @@ window.addEventListener("load", () => {
 
   function configurarControles() {
     if (isMobile) {
-      canvas.addEventListener("touchstart", atualizarDestino);
-      canvas.addEventListener("touchmove", atualizarDestino);
+      canvas.addEventListener("touchstart", atualizarDestino, { passive: false });
+      canvas.addEventListener("touchmove", atualizarDestino, { passive: false });
     } else {
-      document.addEventListener("mousemove", (e) => {
+      document.addEventListener("mousemove", e => {
         const rect = canvas.getBoundingClientRect();
         const vx = e.clientX - rect.left;
         const vy = e.clientY - rect.top;
@@ -148,20 +141,19 @@ window.addEventListener("load", () => {
   }
 
   function atualizarDestino(e) {
+    e.preventDefault();
     const rect = canvas.getBoundingClientRect();
     const t = e.touches[0];
     const vx = t.clientX - rect.left;
     const vy = t.clientY - rect.top;
-
     const { x: bx, y: by } = converterCoordenadas(vx, vy);
     const agora = Date.now();
     const dt = agora - ultimoToque;
     ultimoToque = agora;
     const factor = dt > 150 ? 0.3 : 1;
-
     destinoToque = {
       x: bx * factor + (destinoToque?.x || 0) * (1 - factor),
-      y: (by - 80) * factor + (destinoToque?.y || 0) * (1 - factor),
+      y: by * factor + (destinoToque?.y || 0) * (1 - factor) - 80
     };
   }
 
@@ -172,20 +164,13 @@ window.addEventListener("load", () => {
   const gaivota2 = new Obj("img_gaivota2/gaivota1.png", 400, 200);
   const peixe = new Obj("img_peixe/peixe1.png", 744 * 1.1 * Math.random(), 710);
 
-  
   ajustarCanvas();
   configurarControles();
   window.addEventListener("resize", ajustarCanvas);
 
-  
   function jogo() {
     
-    canvas._bufferCtx.clearRect(
-      0,
-      0,
-      canvas._buffer.width,
-      canvas._buffer.height
-    );
+    canvas._bufferCtx.clearRect(0, 0, canvas._buffer.width, canvas._buffer.height);
 
     
     bg.drawing();
@@ -200,7 +185,6 @@ window.addEventListener("load", () => {
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
 
-    
     if (peixe.position[1] <= 560) {
       const dx = peixe.position[0] - gaivota2.position[0];
       const dy = peixe.position[1] - gaivota2.position[1];
@@ -210,15 +194,13 @@ window.addEventListener("load", () => {
         (degrau((gaivota.pontos + gaivota2.pontos) / 2) *
           Math.abs(gaivota.pontos - gaivota2.pontos)) /
           100;
-      const fy =
-        0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
+      const fy = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
       gaivota2.move_gaivota2(
         gaivota2.position[0] + dx * fx,
         gaivota2.position[1] + dy * fy
       );
     }
 
-    
     if (destinoToque) {
       const suav = 0.2;
       const dx = destinoToque.x - gaivota.position[0];
@@ -229,25 +211,25 @@ window.addEventListener("load", () => {
       );
     }
 
-    
     move_peixe(peixe, gaivota, gaivota2);
 
-    
     placar.textContent = `Gaivota1: ${gaivota.pontos}   Gaivota2: ${gaivota2.pontos}`;
 
     
     if (isMobile) {
-      const vctx = canvas._ctx;
-      vctx.save();
-      vctx.clearRect(0, 0, canvas.width, canvas.height);
-      vctx.translate(canvas.width, 0);
-      vctx.rotate(Math.PI / 2);
-      vctx.drawImage(canvas._buffer, 0, 0);
-      vctx.restore();
+      const ctx = canvas._ctx;
+      ctx.save();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.translate(0, canvas.height);
+      ctx.rotate(-Math.PI / 2);
+      ctx.drawImage(canvas._buffer, 0, 0);
+      ctx.restore();
     }
 
     requestAnimationFrame(jogo);
   }
- 
+
+  
 }
-jogo();
+
+jogo()
