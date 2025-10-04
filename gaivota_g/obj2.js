@@ -232,10 +232,10 @@ window.addEventListener("load", () => {
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
 
-    requestAnimationFrame(jogo);
+    //requestAnimationFrame(jogo);
   }
 
 requestAnimationFrame(jogo);//jogo(); 
 });
-//jogo()
+jogo()
 
