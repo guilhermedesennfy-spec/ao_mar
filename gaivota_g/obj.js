@@ -143,33 +143,74 @@ function ajustarCanvas() {
 
 
 
-let destinoToque = null;
+//let destinoToque = null;
 
+//function configurarControles() {
+//    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+ //   if (isTouchDevice) {
+//        document.addEventListener("touchstart", atualizarDestino);
+//        document.addEventListener("touchmove", atualizarDestino);
+//    } else {
+//        document.addEventListener("mousemove", function(event) {
+ //           const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+ //           destinoToque = {
+  //              x: event.clientX + canvasRect.left,
+  //              y: event.clientY + canvasRect.top
+ //           };
+ //       });
+ //   }
+//}
 function configurarControles() {
+    const canvas = document.getElementById("canvas");
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     if (isTouchDevice) {
-        document.addEventListener("touchstart", atualizarDestino);
-        document.addEventListener("touchmove", atualizarDestino);
+        canvas.addEventListener("touchstart", atualizarDestino);
+        canvas.addEventListener("touchmove", atualizarDestino);
     } else {
         document.addEventListener("mousemove", function(event) {
-            const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
             destinoToque = {
-                x: event.clientX + canvasRect.left,
-                y: event.clientY + canvasRect.top
+                x: event.clientX - canvasRect.left,
+                y: event.clientY - canvasRect.top
             };
         });
     }
 }
 
+
+//function atualizarDestino(event) {
+//    const touch = event.touches[0];
+//    const canvasRect = document.getElementById("canvas").getBoundingClientRect();
+//    destinoToque = {
+//        x: touch.clientX ,
+//        y: touch.clientY 
+//    };//touch.clientX - canvasRect.left//touch.clientY - canvasRect.top
+//}
 function atualizarDestino(event) {
+    const canvas = document.getElementById("canvas");
+    const canvasRect = canvas.getBoundingClientRect();
     const touch = event.touches[0];
-    const canvasRect = document.getElementById("canvas").getBoundingClientRect();
-    destinoToque = {
-        x: touch.clientX ,
-        y: touch.clientY 
-    };//touch.clientX - canvasRect.left//touch.clientY - canvasRect.top
+
+    let x = touch.clientX - canvasRect.left;
+    let y = touch.clientY - canvasRect.top;
+    if (isMobile) {
+        const rotatedX = y;
+        const rotatedY = canvas.width - x;
+
+        destinoToque = {
+            x: rotatedX,
+            y: rotatedY
+        };
+    } else {
+        destinoToque = {
+            x: x,
+            y: y
+        };
+    }
 }
+
 function ativarFullscreen() {
     const docEl = document.documentElement;
     if (docEl.requestFullscreen) {
@@ -227,9 +268,9 @@ window.addEventListener("resize", ajustarCanvas);
 //    requestAnimationFrame(jogo);
 
 //}
-document.addEventListener("touchmove", function(e) {
-    e.preventDefault();
-}, { passive: false });
+//document.addEventListener("touchmove", function(e) {
+//    e.preventDefault();
+//}, { passive: false });
 
 function jogo() {
     //ativarFullscreen();
