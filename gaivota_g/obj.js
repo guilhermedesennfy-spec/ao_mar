@@ -166,9 +166,9 @@ function atualizarDestino(event) {
     const touch = event.touches[0];
     const canvasRect = document.getElementById("canvas").getBoundingClientRect();
     destinoToque = {
-        x: touch.clientX - canvasRect.left,
-        y: touch.clientY - canvasRect.top
-    };
+        x: touch.clientX ,
+        y: touch.clientY 
+    };//touch.clientX - canvasRect.left//touch.clientY - canvasRect.top
 }
 function ativarFullscreen() {
     const docEl = document.documentElement;
