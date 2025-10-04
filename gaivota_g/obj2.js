@@ -3,21 +3,21 @@ window.addEventListener("load", () => {
   const placar = document.querySelector("h3");
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  
+  // Função de dificuldade
   function degrau(x) {
     const e = Math.exp(x * 0.2);
     const k = -Math.pow(((x * 0.2) - 10) / e, 2);
     return Math.exp(k) * 1.8801;
   }
 
-  
+  // Converte coords de visualização em coords do buffer não rotacionado
   function converterCoordenadas(vx, vy) {
     if (!isMobile) return { x: vx, y: vy };
     const bw = canvas._buffer.width;
     return { x: bw - vy, y: vx };
   }
 
-  
+  // Classe genérica para fundo, gaivotas e peixe
   function Obj(src, x, y) {
     this.image = new Image();
     this.image.src = src;
@@ -60,11 +60,13 @@ window.addEventListener("load", () => {
     };
   }
 
+  // Move o fundo em looping
   function move_bg(bg, bg2) {
     bg.position[0] = bg.position[0] > -744 ? bg.position[0] - 1 : 0;
     bg2.position[0] = bg2.position[0] > 0 ? bg2.position[0] - 1 : 744;
   }
 
+  // Movimenta o peixe e trata colisões
   function move_peixe(peixe, g1, g2) {
     const vel = 2 + (g1.pontos + g2.pontos) / (2 * peixe.x);
     peixe.position[1] -= vel;
@@ -94,6 +96,7 @@ window.addEventListener("load", () => {
     if (vel >= 15) peixe.x += 1;
   }
 
+  // Ajusta o canvas e cria buffer para mobile
   function ajustarCanvas() {
     const ctx = canvas.getContext("2d");
     if (isMobile) {
@@ -117,6 +120,7 @@ window.addEventListener("load", () => {
   let destinoToque = null;
   let ultimoToque = Date.now();
 
+  // Configura controles de mouse e toque
   function configurarControles() {
     if (isMobile) {
       canvas.addEventListener("touchstart", atualizarDestino, { passive: false });
@@ -131,6 +135,7 @@ window.addEventListener("load", () => {
     }
   }
 
+  // Atualiza destino de toque com suavização
   function atualizarDestino(e) {
     e.preventDefault();
     const rect = canvas.getBoundingClientRect();
@@ -148,53 +153,42 @@ window.addEventListener("load", () => {
     };
   }
 
-  
+  // Cria instâncias dos objetos
   const bg = new Obj("img_fundo/fundo2.png", 0, 0);
   const bg2 = new Obj("img_fundo/fundo2.png", 744, 0);
   const gaivota = new Obj("img_gaivota/gaivota1.png", 100, 200);
   const gaivota2 = new Obj("img_gaivota2/gaivota1.png", 400, 200);
-  const peixe = new Obj(
-    "img_peixe/peixe1.png",
-    744 * Math.random(),
-    710
-  );
+  const peixe = new Obj("img_peixe/peixe1.png", Math.random() * 744, 710);
 
   ajustarCanvas();
   configurarControles();
   window.addEventListener("resize", ajustarCanvas);
 
+  // Loop principal do jogo
   function jogo() {
-    
-    canvas._bufferCtx.clearRect(
-      0,
-      0,
-      canvas._buffer.width,
-      canvas._buffer.height
-    );
+    // Limpa buffer
+    canvas._bufferCtx.clearRect(0, 0, canvas._buffer.width, canvas._buffer.height);
 
-    
+    // Desenha cena no buffer
     bg.drawing();
     bg2.drawing();
     gaivota.drawing();
     gaivota2.drawing();
     peixe.drawing();
 
-    
+    // Atualiza lógica
     move_bg(bg, bg2);
     gaivota.anim("img_gaivota/gaivota", 4, 6);
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
 
-    
+    // Gaivota2 persegue o peixe
     if (peixe.position[1] <= 560) {
       const dx = peixe.position[0] - gaivota2.position[0];
       const dy = peixe.position[1] - gaivota2.position[1];
-      const fx =
-        0.0015 +
-        (gaivota.pontos + gaivota2.pontos) / 3500 +
+      const fx = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500 +
         (degrau((gaivota.pontos + gaivota2.pontos) / 2) *
-          Math.abs(gaivota.pontos - gaivota2.pontos)) /
-          100;
+          Math.abs(gaivota.pontos - gaivota2.pontos)) / 100;
       const fy = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
       gaivota2.move_gaivota2(
         gaivota2.position[0] + dx * fx,
@@ -202,7 +196,7 @@ window.addEventListener("load", () => {
       );
     }
 
-    
+    // Gaivota1 segue toque/deslize
     if (destinoToque) {
       const suav = 0.2;
       const dx = destinoToque.x - gaivota.position[0];
@@ -213,29 +207,25 @@ window.addEventListener("load", () => {
       );
     }
 
+    // Atualiza peixe e colisões
     move_peixe(peixe, gaivota, gaivota2);
 
-    
+    // Atualiza placar
     placar.textContent = `Gaivota1: ${gaivota.pontos}   Gaivota2: ${gaivota2.pontos}`;
 
-    
+    // Desenha buffer na tela visível
     const ctx = canvas._ctx;
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     if (isMobile) {
-      
       ctx.translate(0, canvas.height);
       ctx.rotate(-Math.PI / 2);
     }
-
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
 
-    //requestAnimationFrame(jogo);
+    requestAnimationFrame(jogo);
   }
 
-requestAnimationFrame(jogo);//jogo(); 
+  requestAnimationFrame(jogo);
 });
-jogo()
-
