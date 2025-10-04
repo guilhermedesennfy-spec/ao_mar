@@ -21,13 +21,20 @@ function Obj(image,x,y){
     this.velocidade = 0
     this.x =2
 
-    this.drawing =function () {
+    //this.drawing =function () {
         //ctx.drawImage(this.image,this.position[0],this.position[1])
-        const scaleX = canvas.width / 744;
-        const scaleY = canvas.height / 742;
-        ctx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
+    //    const scaleX = canvas.width / 744;
+    //    const scaleY = canvas.height / 742;
+    //    ctx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
         
-    }
+    //}
+    this.drawing = function () {
+    const bufferCtx = canvas._bufferCtx;
+    const scaleX = canvas._buffer.width / 744;
+    const scaleY = canvas._buffer.height / 742;
+    bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
+    };
+
 
 
     this.anim=function(img,tick,frames){
@@ -131,6 +138,13 @@ function atualizarDestino(event) {
         y: touch.clientY - canvasRect.top
     };
 }
+function ativarFullscreen() {
+    const docEl = document.documentElement;
+    if (docEl.requestFullscreen) {
+        docEl.requestFullscreen();
+    }
+}
+
 
 
 
@@ -186,6 +200,8 @@ document.addEventListener("touchmove", function(e) {
 }, { passive: false });
 
 function jogo() {
+    ativarFullscreen();
+
     //ajustarCanvas();
     //window.addEventListener("resize", ajustarCanvas);
     if (!orientacaoTravada && screen.orientation && screen.orientation.lock) {
@@ -238,6 +254,14 @@ function jogo() {
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
     //ctx.clearRect(0, O, canvas.width, canvas.height);
+    const ctx = canvas._ctx;
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.translate(canvas.width, 0);
+    ctx.rotate(Math.PI / 2);
+    ctx.drawImage(canvas._buffer, 0, 0);
+    ctx.restore();
+
 
     requestAnimationFrame(jogo);
 }
