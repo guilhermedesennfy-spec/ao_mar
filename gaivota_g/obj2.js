@@ -1,239 +1,262 @@
-window.addEventListener("load", () => {
-  // Canvas e contexto
-  const canvas = document.getElementById("canvas");
-  let ctx, buffer, bctx, scaleX, scaleY;
+window.addEventListener("load", init);
 
-  // Tamanho do mundo lógico
-  const WORLD_W = 744;
-  const WORLD_H = 742;
+let canvas, ctx, buffer, bctx, scaleX, scaleY;
+let pointer = { x: 0, y: 0 };
+let isMobile;
+const WORLD_W = 744;
+const WORLD_H = 742;
 
-  // Detecta mobile
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+// Asset containers
+let bgImgs = [];
+let g1Imgs = [];
+let g2Imgs = [];
+let fishImgs = [];
 
-  // Entradas (mouse ou toque)
-  const input = { x: WORLD_W / 2, y: WORLD_H / 2 };
+// Entities
+let bg1, bg2, gull1, gull2, fish;
+let scores = { g1: 0, g2: 0 };
 
-  // Entidades do jogo
-  let bg1, bg2, gull1, gull2, fish;
-  const scores = { gull1: 0, gull2: 0 };
+// Entry point
+function init() {
+  canvas   = document.getElementById("canvas");
+  ctx      = canvas.getContext("2d");
+  isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  // Assets (imagens)
-  const paths = {
-    bg:       ["img_fundo/fundo2.png", "img_fundo/fundo2.png"],
-    gull1:    Array.from({ length: 6 }, (_, i) => `img_gaivota/gaivota${i+1}.png`),
-    gull2:    Array.from({ length: 6 }, (_, i) => `img_gaivota2/gaivota${i+1}.png`),
-    fish:     Array.from({ length: 6 }, (_, i) => `img_peixe/peixe${i+1}.png`)
-  };
-  const assets = { bg: [], gull1: [], gull2: [], fish: [] };
+  // offscreen buffer
+  buffer = document.createElement("canvas");
+  bctx   = buffer.getContext("2d");
 
-  // Inicializa canvas e buffer
-  function initCanvas() {
-    ctx = canvas.getContext("2d");
-    if (isMobile) {
-      buffer = document.createElement("canvas");
-      buffer.width  = window.innerWidth;
-      buffer.height = window.innerHeight;
-      canvas.width  = buffer.height;
-      canvas.height = buffer.width;
-      bctx = buffer.getContext("2d");
-    } else {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      buffer = canvas;
-      bctx = ctx;
-    }
-    // escala do mundo lógico para pixels
-    scaleX = canvas._buffer
-      ? canvas._buffer.width  / WORLD_W
-      : canvas.width  / WORLD_W;
-    scaleY = canvas._buffer
-      ? canvas._buffer.height / WORLD_H
-      : canvas.height / WORLD_H;
+  adjustCanvas();
+  window.addEventListener("resize", adjustCanvas);
+
+  setupInput();
+  loadAssets().then(startGame);
+}
+
+// Adjust sizes and scaling
+function adjustCanvas() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  if (isMobile) {
+    buffer.width  = vh;
+    buffer.height = vw;
+    canvas.width  = vh;
+    canvas.height = vw;
+  } else {
+    buffer.width  = vw;
+    buffer.height = vh;
+    canvas.width  = vw;
+    canvas.height = vh;
   }
+  scaleX = buffer.width  / WORLD_W;
+  scaleY = buffer.height / WORLD_H;
+}
 
-  // Carrega uma única imagem
-  function loadImage(src) {
+// Pointer input (mouse or touch)
+function setupInput() {
+  canvas.addEventListener("pointermove", e => {
+    const r = canvas.getBoundingClientRect();
+    let x = e.clientX - r.left;
+    let y = e.clientY - r.top;
+    if (isMobile) {
+      // rotate coords 90° anticlockwise
+      [x, y] = [y, canvas.width - x];
+    }
+    pointer.x = x / scaleX;
+    pointer.y = y / scaleY;
+  });
+}
+
+// Load all images
+async function loadAssets() {
+  function load(src) {
     return new Promise(res => {
       const img = new Image();
       img.onload = () => res(img);
-      img.src = src;
+      img.src   = src;
     });
   }
 
-  // Carrega todos os assets
-  async function loadAssets() {
-    // fundo
-    assets.bg = await Promise.all(paths.bg.map(loadImage));
-    // gull1, gull2, peixe
-    assets.gull1 = await Promise.all(paths.gull1.map(loadImage));
-    assets.gull2 = await Promise.all(paths.gull2.map(loadImage));
-    assets.fish  = await Promise.all(paths.fish.map(loadImage));
+  bgImgs = await Promise.all([
+    load("img_fundo/fundo2.png"),
+    load("img_fundo/fundo2.png")
+  ]);
+
+  g1Imgs = await Promise.all(
+    Array.from({ length: 6 }, (_, i) => load(`img_gaivota/gaivota${i+1}.png`))
+  );
+  g2Imgs = await Promise.all(
+    Array.from({ length: 6 }, (_, i) => load(`img_gaivota2/gaivota${i+1}.png`))
+  );
+  fishImgs = await Promise.all(
+    Array.from({ length: 6 }, (_, i) => load(`img_peixe/peixe${i+1}.png`))
+  );
+}
+
+// Start the game after assets loaded
+function startGame() {
+  initEntities();
+  requestAnimationFrame(gameLoop);
+}
+
+// Initialize entity objects
+function initEntities() {
+  bg1    = new Background(bgImgs,   0,     0);
+  bg2    = new Background(bgImgs,   WORLD_W,0);
+  gull1  = new Animated(g1Imgs,   100,   200, 4);
+  gull2  = new Animated(g2Imgs,   400,   200, 4);
+  fish   = new Animated(fishImgs, Math.random() * WORLD_W, 710, 6);
+  scores = { g1: 0, g2: 0 };
+}
+
+// Base animated sprite
+class Animated {
+  constructor(frames, x, y, tickMax) {
+    this.frames   = frames;
+    this.pos      = { x, y };
+    this.tick     = 0;
+    this.idx      = 0;
+    this.tickMax  = tickMax;
   }
-
-  // Entidade genérica com animação de frames
-  class Sprite {
-    constructor(frames, x, y, frameTick = 6) {
-      this.frames = frames;
-      this.pos    = { x, y };
-      this.tick   = 0;
-      this.idx    = 0;
-      this.frameTick = frameTick;
-    }
-    updateAnim() {
-      if (++this.tick >= this.frameTick) {
-        this.tick = 0;
-        this.idx  = (this.idx + 1) % this.frames.length;
-      }
-    }
-    draw(context) {
-      const img = this.frames[this.idx];
-      context.drawImage(
-        img,
-        this.pos.x * scaleX,
-        this.pos.y * scaleY,
-        img.width * scaleX,
-        img.height * scaleY
-      );
-    }
-  }
-
-  // Inicializa entidades após carregar assets
-  function setupEntities() {
-    bg1   = new Sprite(assets.bg,   0,   0,  1);
-    bg2   = new Sprite(assets.bg,   WORLD_W, 0, 1);
-    gull1 = new Sprite(assets.gull1, 100, 200, 4);
-    gull2 = new Sprite(assets.gull2, 400, 200, 4);
-    fish  = new Sprite(assets.fish,  Math.random() * WORLD_W, 710, 6);
-  }
-
-  // Configura controles de mouse e toque (pointerevents unificam ambos)
-  function initControls() {
-    canvas.addEventListener("pointermove", e => {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      let x = e.clientX - rect.left;
-      let y = e.clientY - rect.top;
-      if (isMobile) {
-        // converte coords rotacionadas 90° anti-horário
-        const ww = canvas.width, hh = canvas.height;
-        ;[x, y] = [y, ww - x];
-      }
-      // mapeia para mundo lógico
-      input.x = x / scaleX;
-      input.y = y / scaleY;
-    });
-  }
-
-  // Move fundo em looping
-  function updateBackground() {
-    bg1.pos.x -= 1;
-    if (bg1.pos.x <= -WORLD_W) bg1.pos.x = 0;
-    bg2.pos.x -= 1;
-    if (bg2.pos.x <= 0) bg2.pos.x = WORLD_W;
-  }
-
-  // Move peixe e trata colisões
-  function updateFish() {
-    const speed = 2 + (scores.gull1 + scores.gull2) / 4;
-    fish.pos.y -= speed;
-    if (fish.pos.y <= 0) {
-      fish.pos.x = Math.random() * WORLD_W;
-      fish.pos.y = WORLD_H;
-    }
-
-    function hit(gull, key) {
-      const gx = gull.pos.x, gy = gull.pos.y;
-      const px = fish.pos.x, py = fish.pos.y;
-      return gx > px - 36 && gx < px + 36 && gy > py - 36 && gy < py + 36;
-    }
-
-    if (hit(gull1, "gull1")) {
-      scores.gull1++;
-      fish.pos.x = Math.random() * WORLD_W;
-      fish.pos.y = WORLD_H;
-    }
-    if (hit(gull2, "gull2")) {
-      scores.gull2++;
-      fish.pos.x = Math.random() * WORLD_W;
-      fish.pos.y = WORLD_H;
+  updateAnim() {
+    if (++this.tick >= this.tickMax) {
+      this.tick = 0;
+      this.idx  = (this.idx + 1) % this.frames.length;
     }
   }
+  draw(ctx) {
+    const img = this.frames[this.idx];
+    ctx.drawImage(
+      img,
+      this.pos.x * scaleX,
+      this.pos.y * scaleY,
+      img.width  * scaleX,
+      img.height * scaleY
+    );
+  }
+}
 
-  // Gaivota 2 persegue o peixe
-  function updateGull2() {
-    if (fish.pos.y <= WORLD_H * 0.75) {
-      const dx = fish.pos.x - gull2.pos.x;
-      const dy = fish.pos.y - gull2.pos.y;
-      const fx = 0.001 + (scores.gull1 + scores.gull2) / 3000
-                + (degrau((scores.gull1 + scores.gull2) / 2)
-                   * Math.abs(scores.gull1 - scores.gull2)) / 200;
-      const fy = 0.0002 + (scores.gull1 + scores.gull2) / 2000;
-      gull2.pos.x += dx * fx;
-      gull2.pos.y += dy * fy;
-    }
+// Background class for seamless scroll
+class Background {
+  constructor(frames, x, y) {
+    this.frames  = frames;
+    this.pos     = { x, y };
+  }
+  update() {
+    this.pos.x -= 1;
+    if (this.pos.x <= -WORLD_W) this.pos.x = WORLD_W;
+  }
+  draw(ctx) {
+    const img = this.frames[0];
+    ctx.drawImage(
+      img,
+      this.pos.x * scaleX,
+      this.pos.y * scaleY,
+      img.width  * scaleX,
+      img.height * scaleY
+    );
+  }
+}
+
+// Game loop
+function gameLoop() {
+  update();
+  drawBuffer();
+  renderToScreen();
+  requestAnimationFrame(gameLoop);
+}
+
+// Update all game logic
+function update() {
+  // background
+  bg1.update();
+  bg2.update();
+
+  // animations
+  bg1.draw(bctx); // no anim tick for bg, single frame
+  bg2.draw(bctx);
+  gull1.updateAnim();
+  gull2.updateAnim();
+  fish.updateAnim();
+
+  // fish movement & collisions
+  updateFish();
+
+  // seagull2 AI chase
+  updateGull2();
+
+  // seagull1 follows pointer
+  updateGull1();
+}
+
+// Move fish and detect catches
+function updateFish() {
+  const speed = 2 + (scores.g1 + scores.g2) / 4;
+  fish.pos.y -= speed;
+  if (fish.pos.y <= 0) {
+    fish.pos.x = Math.random() * WORLD_W;
+    fish.pos.y = WORLD_H;
   }
 
-  // Gaivota 1 segue o input
-  function updateGull1() {
-    const s = 0.2;
-    gull1.pos.x += (input.x - gull1.pos.x) * s;
-    gull1.pos.y += (input.y - gull1.pos.y) * s;
+  function hit(g, key) {
+    const dx = Math.abs(g.pos.x - fish.pos.x);
+    const dy = Math.abs(g.pos.y - fish.pos.y);
+    return dx < 36 && dy < 36;
   }
-
-  // Atualização de todas as entidades
-  function update() {
-    updateBackground();
-    bg1.updateAnim();
-    bg2.updateAnim();
-    gull1.updateAnim();
-    gull2.updateAnim();
-    fish.updateAnim();
-    updateFish();
-    updateGull2();
-    updateGull1();
+  if (hit(gull1, "g1")) {
+    scores.g1++;
+    fish.pos.x = Math.random() * WORLD_W;
+    fish.pos.y = WORLD_H;
   }
-
-  // Desenha tudo no buffer
-  function drawBuffer() {
-    bctx.clearRect(0, 0, buffer.width, buffer.height);
-    // fundo duplo
-    bg1.draw(bctx);
-    bg2.draw(bctx);
-    // sprites
-    fish.draw(bctx);
-    gull2.draw(bctx);
-    gull1.draw(bctx);
+  if (hit(gull2, "g2")) {
+    scores.g2++;
+    fish.pos.x = Math.random() * WORLD_W;
+    fish.pos.y = WORLD_H;
   }
+}
 
-  // Render no canvas visível (rotaciona se mobile)
-  function render() {
-    ctx.save();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (isMobile) {
-      ctx.translate(0, canvas.height);
-      ctx.rotate(-Math.PI / 2);
-    }
-    ctx.drawImage(buffer, 0, 0);
-    ctx.restore();
-    // placar
-    placar.textContent = `G1: ${scores.gull1}   G2: ${scores.gull2}`;
+// Seagull2 AI
+function updateGull2() {
+  if (fish.pos.y <= WORLD_H * 0.75) {
+    const dx = fish.pos.x - gull2.pos.x;
+    const dy = fish.pos.y - gull2.pos.y;
+    const fx = 0.001 + (scores.g1 + scores.g2) / 3000
+              + (degrau((scores.g1 + scores.g2) / 2) *
+                Math.abs(scores.g1 - scores.g2)) / 200;
+    const fy = 0.0002 + (scores.g1 + scores.g2) / 2000;
+    gull2.pos.x += dx * fx;
+    gull2.pos.y += dy * fy;
   }
+}
 
-  // Loop principal
-  function loop() {
-    update();
-    drawBuffer();
-    render();
-    requestAnimationFrame(loop);
+// Seagull1 follows pointer
+function updateGull1() {
+  const s = 0.2;
+  gull1.pos.x += (pointer.x - gull1.pos.x) * s;
+  gull1.pos.y += (pointer.y - gull1.pos.y) * s;
+}
+
+// Draw everything onto the offscreen buffer
+function drawBuffer() {
+  bctx.clearRect(0, 0, buffer.width, buffer.height);
+  bg1.draw(bctx);
+  bg2.draw(bctx);
+  fish.draw(bctx);
+  gull2.draw(bctx);
+  gull1.draw(bctx);
+}
+
+// Copy buffer to main canvas, rotating on mobile
+function renderToScreen() {
+  ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (isMobile) {
+    ctx.translate(0, canvas.height);
+    ctx.rotate(-Math.PI / 2);
   }
-
-  // Inicia tudo
-  (async function start() {
-    initCanvas();
-    window.addEventListener("resize", initCanvas);
-    await loadAssets();
-    setupEntities();
-    initControls();
-    requestAnimationFrame(loop);
-  })();
-});
+  ctx.drawImage(buffer, 0, 0);
+  // update score display
+  document.querySelector("h3").textContent =
+    `G1: ${scores.g1}   G2: ${scores.g2}`;
+  ctx.restore();
+}
