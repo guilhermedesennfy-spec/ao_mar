@@ -237,5 +237,5 @@ window.addEventListener("load", () => {
 
 requestAnimationFrame(jogo);//jogo(); 
 });
-jogo()
+//jogo()
 
