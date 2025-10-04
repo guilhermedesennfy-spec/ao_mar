@@ -22,7 +22,10 @@ function Obj(image,x,y){
     this.x =2
 
     this.drawing =function () {
-        ctx.drawImage(this.image,this.position[0],this.position[1])
+        //ctx.drawImage(this.image,this.position[0],this.position[1])
+        const scaleX = canvas.width / 744;
+        const scaleY = canvas.height / 742;
+        ctx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
         
     }
 
@@ -94,8 +97,10 @@ function move_peixe(peixe,gaivota,gaivota2){
 }
 function ajustarCanvas() {
     const canvas = document.getElementById("canvas");
+    const canv = canvas.getContext("2d");
     canvas.width = window.innerWidth;//744;//window.innerWidth
     canvas.height = window.innerHeight;//742;//window.innerHeight
+    canv.setTransform(0, 1, -1, 0, canvas.height, 0);
 }
 
 
@@ -183,6 +188,12 @@ document.addEventListener("touchmove", function(e) {
 function jogo() {
     //ajustarCanvas();
     //window.addEventListener("resize", ajustarCanvas);
+    if (!orientacaoTravada && screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(err => {
+            console.warn("Não foi possível travar a orientação:", err);
+        });
+        orientacaoTravada = true;
+    }
     
     bg.drawing();
     bg2.drawing();
