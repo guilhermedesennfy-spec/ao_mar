@@ -35,12 +35,30 @@ function Obj(image,x,y){
    // const scaleY = canvas._buffer.height / 742;
    // bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
    // };
+    //this.drawing = function () {
+    //const bufferCtx = canvas._bufferCtx;
+    //const scaleX = canvas._buffer.width / 744;
+   // const scaleY = canvas._buffer.height / 742;
+   // bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
+   // };
     this.drawing = function () {
     const bufferCtx = canvas._bufferCtx;
     const scaleX = canvas._buffer.width / 744;
     const scaleY = canvas._buffer.height / 742;
-    bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
+
+    bufferCtx.save();
+    bufferCtx.translate((this.position[0] + this.image.width / 2) * scaleX, (this.position[1] + this.image.height / 2) * scaleY);
+    bufferCtx.rotate(isMobile ? Math.PI / 2 : 0);
+    bufferCtx.drawImage(
+        this.image,
+        -this.image.width / 2 * scaleX,
+        -this.image.height / 2 * scaleY,
+        this.image.width * scaleX,
+        this.image.height * scaleY
+    );
+    bufferCtx.restore();
     };
+
 
 
 
@@ -141,6 +159,32 @@ function move_peixe(peixe,gaivota,gaivota2){
   //  }
 //}
 
+//function ajustarCanvas() {
+ //   const canvas = document.getElementById("canvas");
+//    const ctx = canvas.getContext("2d");
+
+//    if (isMobile) {
+ //       const buffer = document.createElement("canvas");
+ //       buffer.width = window.innerHeight;
+ //       buffer.height = window.innerWidth;
+ //       canvas.width = buffer.height;
+ //       canvas.height = buffer.width;
+
+  //      canvas._ctx = ctx;
+ //       canvas._buffer = buffer;
+ //       canvas._bufferCtx = buffer.getContext("2d");
+
+        
+ //       canvas._bufferCtx.fillStyle = "black";
+ //       canvas._bufferCtx.fillRect(0, 0, buffer.width, buffer.height);
+ //   } else {
+  //      canvas.width = window.innerWidth;
+ //       canvas.height = window.innerHeight;
+  //      canvas._ctx = ctx;
+  //      canvas._buffer = canvas;
+  //      canvas._bufferCtx = ctx;
+ //   }
+//}
 function ajustarCanvas() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -155,10 +199,6 @@ function ajustarCanvas() {
         canvas._ctx = ctx;
         canvas._buffer = buffer;
         canvas._bufferCtx = buffer.getContext("2d");
-
-        
-        canvas._bufferCtx.fillStyle = "black";
-        canvas._bufferCtx.fillRect(0, 0, buffer.width, buffer.height);
     } else {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -167,6 +207,7 @@ function ajustarCanvas() {
         canvas._bufferCtx = ctx;
     }
 }
+
 
 
 
@@ -260,6 +301,36 @@ function configurarControles() {
     }
 }
 
+//function atualizarDestino(event) {
+//    const canvas = document.getElementById("canvas");
+//    const canvasRect = canvas.getBoundingClientRect();
+ //   const touch = event.touches[0];
+
+ //   let x = touch.clientX - canvasRect.left;
+ //   let y = touch.clientY - canvasRect.top;
+
+  //  if (isMobile) {
+  //      const rotatedX = y;
+  //      const rotatedY = canvas.width - x;
+
+  //      const agora = Date.now();
+  //    const intervalo = agora - ultimoToque;
+   //     ultimoToque = agora;
+
+        
+  //      const suavidade = intervalo > 150 ? 0.3 : 1;
+
+   //     destinoToque = {
+   //         x: rotatedX * suavidade + (destinoToque?.x || 0) * (1 - suavidade),
+   //         y: rotatedY * suavidade + (destinoToque?.y || 0) * (1 - suavidade)
+   //     };
+  //  } else {
+  //      destinoToque = {
+  //          x: x,
+  //          y: y
+  //      };
+  //  }
+//}
 function atualizarDestino(event) {
     const canvas = document.getElementById("canvas");
     const canvasRect = canvas.getBoundingClientRect();
@@ -276,20 +347,21 @@ function atualizarDestino(event) {
         const intervalo = agora - ultimoToque;
         ultimoToque = agora;
 
-        // Suavização: se o intervalo for grande, reduzimos o impacto
         const suavidade = intervalo > 150 ? 0.3 : 1;
 
+        
         destinoToque = {
             x: rotatedX * suavidade + (destinoToque?.x || 0) * (1 - suavidade),
-            y: rotatedY * suavidade + (destinoToque?.y || 0) * (1 - suavidade)
+            y: (rotatedY - 80) * suavidade + (destinoToque?.y || 0) * (1 - suavidade)
         };
     } else {
         destinoToque = {
             x: x,
-            y: y
+            y: y - 80 
         };
     }
 }
+
 
 
 function ativarFullscreen() {
@@ -354,9 +426,13 @@ window.addEventListener("resize", ajustarCanvas);
 //}, { passive: false });
 
 function jogo() {
+    //if (isMobile) {
+    //canvas._bufferCtx.clearRect(0, 0, canvas._buffer.width, canvas._buffer.height);
+    //}
     if (isMobile) {
     canvas._bufferCtx.clearRect(0, 0, canvas._buffer.width, canvas._buffer.height);
     }
+
 
     //ativarFullscreen();
 
@@ -426,7 +502,7 @@ function jogo() {
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.translate(canvas.width, 0);
-    //ctx.rotate(Math.PI / 2);
+    ctx.rotate(Math.PI / 2);
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
     }
