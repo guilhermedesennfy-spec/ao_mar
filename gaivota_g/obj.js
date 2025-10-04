@@ -161,6 +161,7 @@ function ajustarCanvas() {
  //       });
  //   }
 //}
+let destinoToque = null;
 function configurarControles() {
     const canvas = document.getElementById("canvas");
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
