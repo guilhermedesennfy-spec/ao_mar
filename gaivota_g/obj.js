@@ -1,3 +1,4 @@
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 
 function degrau(x){
@@ -28,12 +29,19 @@ function Obj(image,x,y){
     //    ctx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
         
     //}
+    //this.drawing = function () {
+    //const bufferCtx = canvas._bufferCtx;
+    //const scaleX = canvas._buffer.width / 744;
+   // const scaleY = canvas._buffer.height / 742;
+   // bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
+   // };
     this.drawing = function () {
     const bufferCtx = canvas._bufferCtx;
     const scaleX = canvas._buffer.width / 744;
     const scaleY = canvas._buffer.height / 742;
     bufferCtx.drawImage(this.image, this.position[0] * scaleX, this.position[1] * scaleY, this.image.width * scaleX, this.image.height * scaleY);
     };
+
 
 
 
@@ -102,13 +110,37 @@ function move_peixe(peixe,gaivota,gaivota2){
     
 
 }
+//function ajustarCanvas() {
+//    const canvas = document.getElementById("canvas");
+//    const canv = canvas.getContext("2d");
+//    canvas.width = window.innerWidth;//744;//window.innerWidth
+//    canvas.height = window.innerHeight;//742;//window.innerHeight
+//    canv.setTransform(0, 1, -1, 0, canvas.height, 0);
+//}
 function ajustarCanvas() {
     const canvas = document.getElementById("canvas");
-    const canv = canvas.getContext("2d");
-    canvas.width = window.innerWidth;//744;//window.innerWidth
-    canvas.height = window.innerHeight;//742;//window.innerHeight
-    canv.setTransform(0, 1, -1, 0, canvas.height, 0);
+    const ctx = canvas.getContext("2d");
+
+    if (isMobile) {
+        
+        const buffer = document.createElement("canvas");
+        buffer.width = window.innerHeight;
+        buffer.height = window.innerWidth;
+        canvas.width = buffer.height;
+        canvas.height = buffer.width;
+
+        canvas._ctx = ctx;
+        canvas._buffer = buffer;
+        canvas._bufferCtx = buffer.getContext("2d");
+    } else {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas._ctx = ctx;
+        canvas._buffer = canvas;
+        canvas._bufferCtx = ctx;
+    }
 }
+
 
 
 let destinoToque = null;
@@ -200,16 +232,16 @@ document.addEventListener("touchmove", function(e) {
 }, { passive: false });
 
 function jogo() {
-    ativarFullscreen();
+    //ativarFullscreen();
 
     //ajustarCanvas();
     //window.addEventListener("resize", ajustarCanvas);
-    if (!orientacaoTravada && screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(err => {
-            console.warn("Não foi possível travar a orientação:", err);
-        });
-        orientacaoTravada = true;
-    }
+    //if (!orientacaoTravada && screen.orientation && screen.orientation.lock) {
+      //  screen.orientation.lock('landscape').catch(err => {
+      //      console.warn("Não foi possível travar a orientação:", err);
+      //  });
+      //  orientacaoTravada = true;
+    //}
     
     bg.drawing();
     bg2.drawing();
@@ -254,6 +286,7 @@ function jogo() {
     move_peixe(peixe, gaivota, gaivota2);
     placar.textContent = `pontos Gaivota1 : ${gaivota.pontos}  pontos Gaivota2 : ${gaivota2.pontos}`;
     //ctx.clearRect(0, O, canvas.width, canvas.height);
+    if (isMobile) {
     const ctx = canvas._ctx;
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -261,6 +294,8 @@ function jogo() {
     ctx.rotate(Math.PI / 2);
     ctx.drawImage(canvas._buffer, 0, 0);
     ctx.restore();
+    }
+
 
 
     requestAnimationFrame(jogo);
