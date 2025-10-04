@@ -1,96 +1,109 @@
 window.addEventListener("load", () => {
-  // elementos e flags
-  const canvas   = document.getElementById("canvas");
-  const placar   = document.querySelector("h3");
+  const canvas = document.getElementById("canvas");
+  const placar = document.querySelector("h3");
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  // gera fator “degrau” para a dificuldade
+  // curva de dificuldade para gaivota2
   function degrau(x) {
     const e = Math.exp(x * 0.2);
-    const k = -Math.pow((x * 0.2 - 10) / e, 2);
+    const k = -Math.pow(((x * 0.2) - 10) / e, 2);
     return Math.exp(k) * 1.8801;
   }
 
-  // converte coords de tela em coords do buffer não-rotacionado
+  // converte coords de tela para coords do buffer (não-rotacionado)
   function converterCoordenadas(vx, vy) {
     if (!isMobile) return { x: vx, y: vy };
-    // buffer.width = largura do buffer
     const bw = canvas._buffer.width;
     return { x: bw - vy, y: vx };
   }
 
-  // construtor genérico (fundo, gaivotas, peixe)
+  // classe genérica: fundo, gaivota, peixe
   function Obj(src, x, y) {
-    this.image    = new Image();
-    this.image.src= src;
+    this.image = new Image();
+    this.image.src = src;
     this.position = [x, y];
-    this.frame    = 1;
-    this.tick     = 0;
-    this.pontos   = 0;
-    this.x        = 2;
+    this.frame = 1;
+    this.tick = 0;
+    this.pontos = 0;
+    this.x = 2;
 
+    // desenha no buffer, com escala e rotação em mobile
     this.drawing = () => {
-      const ctxB    = canvas._bufferCtx;
-      const scaleX  = canvas._buffer.width  / 744;
-      const scaleY  = canvas._buffer.height / 742;
-      ctxB.drawImage(
+      const ctx = canvas._bufferCtx;
+      const scaleX = canvas._buffer.width  / 744;
+      const scaleY = canvas._buffer.height / 742;
+      ctx.save();
+      // centro do sprite
+      const cx = (this.position[0] + this.image.width / 2)  * scaleX;
+      const cy = (this.position[1] + this.image.height / 2) * scaleY;
+      ctx.translate(cx, cy);
+      if (isMobile) ctx.rotate(Math.PI / 2);
+      ctx.drawImage(
         this.image,
-        this.position[0] * scaleX,
-        this.position[1] * scaleY,
-        this.image.width * scaleX,
-        this.image.height* scaleY
+        -this.image.width  / 2 * scaleX,
+        -this.image.height / 2 * scaleY,
+        this.image.width  * scaleX,
+        this.image.height * scaleY
       );
+      ctx.restore();
     };
 
+    // animação de frames
     this.anim = (base, tMax, frames) => {
-      if (++this.tick === tMax) {
+      this.tick++;
+      if (this.tick === tMax) {
         this.tick = 0;
         this.frame = this.frame === frames ? 1 : this.frame + 1;
         this.image.src = `${base}${this.frame}.png`;
       }
     };
 
+    // controla movimento da gaivota 1
     this.move_gaivota = (x, y) => {
       this.position[0] = x - 43;
       this.position[1] = y - 47;
     };
 
+    // controla movimento da gaivota 2
     this.move_gaivota2 = (x, y) => {
       this.position[0] = x;
       this.position[1] = y;
     };
   }
 
-  // fundo em loop
+  // desloca o fundo em loop
   function move_bg(bg, bg2) {
     bg.position[0]  = bg.position[0]  > -744 ? bg.position[0]  - 1 : 0;
     bg2.position[0] = bg2.position[0] >    0 ? bg2.position[0] - 1 : 744;
   }
 
-  // peixe sobe e trata colisões
+  // movimenta o peixe e trata colisões
   function move_peixe(peixe, g1, g2) {
     const vel = 2 + (g1.pontos + g2.pontos) / (2 * peixe.x);
     peixe.position[1] -= vel;
-    if (peixe.position[1] <= 0) peixe.position = [800 * Math.random(), 700];
-
+    if (peixe.position[1] <= 0) {
+      peixe.position[0] = 800 * Math.random();
+      peixe.position[1] = 700;
+    }
     const colisao = g =>
       g.position[0] > peixe.position[0] - 36 &&
       g.position[0] < peixe.position[0] + 36 &&
       g.position[1] > peixe.position[1] - 36 &&
       g.position[1] < peixe.position[1] + 36;
-
     if (colisao(g1)) {
       g1.pontos++;
-      peixe.position = [800 * Math.random(), 700];
+      peixe.position[0] = 800 * Math.random();
+      peixe.position[1] = 700;
     }
     if (colisao(g2)) {
       g2.pontos++;
-      peixe.position = [800 * Math.random(), 700];
+      peixe.position[0] = 800 * Math.random();
+      peixe.position[1] = 700;
     }
     if (vel >= 15) peixe.x++;
   }
 
-  // prepara canvas e buffer
+  // configura canvas e buffer para mobile/desktop
   function ajustarCanvas() {
     const ctx = canvas.getContext("2d");
     if (isMobile) {
@@ -111,10 +124,10 @@ window.addEventListener("load", () => {
     }
   }
 
+  // controle de toque/mouse
   let destinoToque = null;
-  let ultimoToque   = Date.now();
+  let ultimoToque = Date.now();
 
-  // configura mouse ou toque
   function configurarControles() {
     if (isMobile) {
       canvas.addEventListener("touchstart", atualizarDestino, { passive: false });
@@ -130,7 +143,6 @@ window.addEventListener("load", () => {
     }
   }
 
-  // trata toque com suavização
   function atualizarDestino(e) {
     e.preventDefault();
     const r  = canvas.getBoundingClientRect();
@@ -148,19 +160,19 @@ window.addEventListener("load", () => {
     };
   }
 
-  // instâncias
-  const bg       = new Obj("img_fundo/fundo2.png",    0,   0);
-  const bg2      = new Obj("img_fundo/fundo2.png",    744, 0);
-  const gaivota  = new Obj("img_gaivota/gaivota1.png",100, 200);
-  const gaivota2 = new Obj("img_gaivota2/gaivota1.png",400, 200);
-  const peixe    = new Obj("img_peixe/peixe1.png",   Math.random() * 744, 710);
+  // cria instâncias dos objetos
+  const bg      = new Obj("img_fundo/fundo2.png",    0,   0);
+  const bg2     = new Obj("img_fundo/fundo2.png",    744, 0);
+  const gaivota   = new Obj("img_gaivota/gaivota1.png", 100, 200);
+  const gaivota2  = new Obj("img_gaivota2/gaivota1.png",400, 200);
+  const peixe     = new Obj("img_peixe/peixe1.png",   Math.random() * 744, 710);
 
   ajustarCanvas();
   configurarControles();
   window.addEventListener("resize", ajustarCanvas);
 
-  // primeira chamada direta; o loop segue só via requestAnimationFrame dentro de jogo()
-  jogo();
+  // inicia o loop — apenas uma chamada aqui
+  requestAnimationFrame(jogo);
 
   function jogo() {
     // limpa buffer
@@ -170,9 +182,11 @@ window.addEventListener("load", () => {
       canvas._buffer.height
     );
 
-    // desenha tudo no buffer
-    bg.drawing();   bg2.drawing();
-    gaivota.drawing();   gaivota2.drawing();
+    // desenha cena no buffer
+    bg.drawing();
+    bg2.drawing();
+    gaivota.drawing();
+    gaivota2.drawing();
     peixe.drawing();
 
     // atualiza lógica
@@ -187,7 +201,7 @@ window.addEventListener("load", () => {
       const dy = peixe.position[1] - gaivota2.position[1];
       const fx = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500 +
         (degrau((gaivota.pontos + gaivota2.pontos) / 2) *
-          Math.abs(gaivota.pontos - gaivota2.pontos)) / 100;
+         Math.abs(gaivota.pontos - gaivota2.pontos)) / 100;
       const fy = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
       gaivota2.move_gaivota2(
         gaivota2.position[0] + dx * fx,
@@ -195,7 +209,7 @@ window.addEventListener("load", () => {
       );
     }
 
-    // gaivota1 segue o toque/mouse
+    // gaivota1 segue mouse ou toque
     if (destinoToque) {
       const s = 0.2;
       const dx = destinoToque.x - gaivota.position[0];
@@ -206,25 +220,24 @@ window.addEventListener("load", () => {
       );
     }
 
+    // movimenta o peixe e trata colisões
     move_peixe(peixe, gaivota, gaivota2);
 
     // atualiza placar
     placar.textContent = `Gaivota1: ${gaivota.pontos}   Gaivota2: ${gaivota2.pontos}`;
 
-    // desenha buffer na tela
+    // copia buffer para o canvas visível, aplicando rotação em mobile
     const ctxVis = canvas._ctx;
     ctxVis.save();
     ctxVis.clearRect(0, 0, canvas.width, canvas.height);
-
     if (isMobile) {
       ctxVis.translate(0, canvas.height);
       ctxVis.rotate(-Math.PI / 2);
     }
-
     ctxVis.drawImage(canvas._buffer, 0, 0);
     ctxVis.restore();
 
-    // só um único requestAnimationFrame em todo o script
+    // mantém o loop
     requestAnimationFrame(jogo);
   }
 });
