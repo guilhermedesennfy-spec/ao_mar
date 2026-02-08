@@ -1,0 +1,154 @@
+
+
+function degrau(x){
+
+    var e = (Math.E)**(x*0.2);
+    var k = -((((x*0.2)-10)/e)**2)
+    return ((Math.E)**(k))*1.8801
+
+}
+
+ffunction Obj(image, x, y, width, height){
+    
+    var canvas = document.getElementById("canvas");
+    var ctx =canvas.getContext("2d");
+    this.image = new Image();
+    this.image.src = image;
+
+    
+    this.position = [x * scale, y * scale];
+
+
+    this.width = width * scale;
+    this.height = height * scale;
+
+    this.frame = 1;
+    this.tick = 0;
+    this.pontos = 0;
+    this.velocidade = 0;
+    this.x =2
+
+    this.drawing =function () {
+        ctx.drawImage(
+    this.image,
+    this.position[0],
+    this.position[1],
+    this.width,
+    this.height
+    );
+
+        
+    }
+
+
+    this.anim=function(img,tick,frames){
+
+        this.tick +=1;
+
+        if (this.tick == tick){
+            this.tick =0;
+            this.frame +=1;
+        }
+        if (this.frame == frames){
+            this.frame=1;
+        }
+        this.image.src=img+this.frame+'.png'
+    }
+    this.move_gaivota = function(x, y){
+    this.position[0] = (x - 43) * scale;
+    this.position[1] = (y - 47) * scale;
+    }
+
+    this.move_gaivota2 = function(x,y){
+        this.position[0]= x* scale
+        this.position[1]= y* scale
+    }
+}
+function move_bg(bg,bg2){
+    if (bg.position[0]>-773* scale){
+        bg.position[0] -=1* scale
+    }
+    if (bg.position[0]==-773* scale){
+        bg.position[0]=0* scale;
+    }
+    if (bg2.position[0]>0* scale){
+        bg2.position[0] -=1* scale
+    }
+    if (bg2.position[0]==0* scale){
+        bg2.position[0]=774* scale;
+    }
+    
+}
+
+function move_peixe(peixe,gaivota,gaivota2){
+    
+    this.velocidade =2+(gaivota.pontos+gaivota2.pontos)/(2*peixe.x);
+    peixe.position[1] -= this.velocidade
+    if (peixe.position[1]<=0 ){
+        peixe.position[0] =800*Math.random()
+        peixe.position[1] =750
+
+    }
+    if(((gaivota.position[0]>peixe.position[0]-36 && gaivota.position[0]<peixe.position[0]+36)&&(gaivota.position[1]>peixe.position[1]-36 && gaivota.position[1]<peixe.position[1]+36))){
+        peixe.position[0] =800*Math.random()
+        peixe.position[1] =750
+        gaivota.pontos +=1;
+    }
+    if(((gaivota2.position[0]>peixe.position[0]-36 && gaivota2.position[0]<peixe.position[0]+36)&&(gaivota2.position[1]>peixe.position[1]-36 && gaivota2.position[1]<peixe.position[1]+36))){
+        peixe.position[0] =800*Math.random()
+        peixe.position[1] =750
+        gaivota2.pontos +=1;
+
+    }
+    if(this.velocidade >=15){
+        peixe.x+=1
+}
+    
+
+}
+
+
+var bg = new Obj('img_fundo/fundo2.png',0,0);
+var bg2 = new Obj('img_fundo/fundo2.png',774,0);
+var gaivota =new Obj('img_gaivota/gaivota1.png',100,200);
+var gaivota2 =new Obj('img_gaivota2/gaivota1.png',400,200);
+var peixe =new Obj("img_peixe/peixe1.png",774*Math.random(),750);
+
+var placar = document.querySelector('h3');
+console.log(placar)
+
+function jogo(){
+    
+    bg.drawing();
+    bg2.drawing();
+    gaivota.drawing();
+    gaivota2.drawing();
+    peixe.drawing();
+    move_bg(bg,bg2);
+    gaivota.anim('img_gaivota/gaivota',4,6);
+    gaivota2.anim('img_gaivota2/gaivota',4,6);
+    peixe.anim("img_peixe/peixe",6,6);
+
+    document.addEventListener("mousemove",function(event){
+        x = event.x;
+        y = event.y;
+        gaivota.move_gaivota(x,y);
+    })
+    var x =gaivota.pontos;
+    if(gaivota.pontos <=10){
+        gaivota.pontos +=12;
+    }
+    
+    if (peixe.position[1]<=560){
+        gaivota2.move_gaivota2((peixe.position[0]-gaivota2.position[0])*(0.0015+(gaivota.pontos+gaivota2.pontos)/3500+(degrau((gaivota.pontos+gaivota2.pontos/2))*(Math.abs(gaivota.pontos-gaivota2.pontos)))/100)+gaivota2.position[0],(peixe.position[1]-gaivota2.position[1])*(0.0002+(gaivota.pontos+gaivota2.pontos)/2000)+gaivota2.position[1])
+
+    }
+    if(x <=10){
+        gaivota.pontos -=12;
+    }
+    move_peixe(peixe,gaivota,gaivota2);
+    placar.textContent ="pontos Gaivota1 : "+gaivota.pontos + "  pontos Gaivota2 : "+gaivota2.pontos;
+    requestAnimationFrame(jogo);
+
+}
+jogo()
