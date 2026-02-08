@@ -319,4 +319,4 @@ function initGame() {
 }
 
 // inicia
-initGame();
+initGame()
