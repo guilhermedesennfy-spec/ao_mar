@@ -77,7 +77,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
             this.height = this.baseH * scale;
         },
 
-        drawing(ctx) {
+        drawing() {//ctx
             ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
         },
 
