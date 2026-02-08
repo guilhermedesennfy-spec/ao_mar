@@ -155,13 +155,15 @@ function gameLoop() {
     gaivota2.drawing();
     peixe.drawing();
 
+    // fundo rolando
+    move_bg(bg, bg2);
+
     // animações
     gaivota.anim("img_gaivota/gaivota", 4, 6);
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
 
-    // fundo rolando
-    move_bg(bg, bg2);
+    
 
     // movimento da gaivota do jogador (mesmo offset do script antigo)
     if (destino) {
@@ -208,14 +210,14 @@ function gameLoop() {
         gaivota.pontos +
         " | Gaivota2: " +
         gaivota2.pontos;
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     requestAnimationFrame(gameLoop);
 }
 
 // ======= Inicialização =======
 function initGame() {
-    //gameLoop();
-    requestAnimationFrame(gameLoop);
+    gameLoop();
+    //requestAnimationFrame(gameLoop);
 }
 
 initGame();
