@@ -216,16 +216,16 @@ function gameLoop() {
     placar.textContent =
         "Gaivota1: " + gaivota.pontos + " | Gaivota2: " + gaivota2.pontos;
 
-    requestAnimationFrame(gameLoop);
+    //requestAnimationFrame(gameLoop);
 }
 
 // ======= Inicialização =======
 function initGame() {
-    //bg.rescale();
-    //bg2.rescale();
-    //gaivota.rescale();
-    //gaivota2.rescale();
-    //peixe.rescale();
+    bg.rescale();
+    bg2.rescale();
+    gaivota.rescale();
+    gaivota2.rescale();
+    peixe.rescale();
 
     requestAnimationFrame(gameLoop);
 }
