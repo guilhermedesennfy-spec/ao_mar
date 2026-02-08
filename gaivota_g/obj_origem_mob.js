@@ -15,37 +15,7 @@ let placar = document.querySelector("h3") || { textContent: "" };
 // Variável global para entrada do usuário
 let destino = null;
 
-// ======= Ajuste do canvas =======
-function ajustarCanvas() {
-    let w = window.innerWidth;
-    let h = window.innerHeight;
 
-    let isPortrait = h > w;
-    let warning = document.getElementById("rotate-warning");
-
-    if (isMobile && isPortrait) {
-        warning.style.display = "flex";
-        canvas.style.display = "none";
-        return;
-    }
-
-    warning.style.display = "none";
-    canvas.style.display = "block";
-
-    canvas.width = w;
-    canvas.height = h;
-
-    scale = Math.min(w / BASE_WIDTH, h / BASE_HEIGHT);
-
-    bg.rescale();
-    bg2.rescale();
-    gaivota.rescale();
-    gaivota2.rescale();
-    peixe.rescale();
-}
-
-window.addEventListener("resize", ajustarCanvas);
-ajustarCanvas();
 
 // ======= Função degrau =======
 function degrau(x) {
@@ -172,6 +142,37 @@ canvas.addEventListener("touchmove", (e) => {
     destino = { x: t.clientX, y: t.clientY };
     e.preventDefault();
 });
+// ======= Ajuste do canvas =======
+function ajustarCanvas() {
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+
+    let isPortrait = h > w;
+    let warning = document.getElementById("rotate-warning");
+
+    if (isMobile && isPortrait) {
+        warning.style.display = "flex";
+        canvas.style.display = "none";
+        return;
+    }
+
+    warning.style.display = "none";
+    canvas.style.display = "block";
+
+    canvas.width = w;
+    canvas.height = h;
+
+    scale = Math.min(w / BASE_WIDTH, h / BASE_HEIGHT);
+
+    bg.rescale();
+    bg2.rescale();
+    gaivota.rescale();
+    gaivota2.rescale();
+    peixe.rescale();
+}
+
+window.addEventListener("resize", ajustarCanvas);
+ajustarCanvas();
 
 // ======= Loop =======
 function gameLoop() {
