@@ -228,8 +228,8 @@ function initGame() {
     //gaivota2.rescale();
     //peixe.rescale();
 
-    //requestAnimationFrame(gameLoop);
-    gameLoop()
+    requestAnimationFrame(gameLoop);
+    //gameLoop()
 }
 
 
