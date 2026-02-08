@@ -231,3 +231,5 @@ function initGame() {
 }
 
 initGame();
+
+initGame();
