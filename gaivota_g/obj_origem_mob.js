@@ -1,4 +1,6 @@
-// ======= Configuração base =======
+// =========================
+// CONFIGURAÇÃO BASE
+// =========================
 let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
@@ -8,13 +10,18 @@ let BASE_HEIGHT = 1080;
 
 let scale = 1;
 let destino = null;
+
+// Controle de carregamento
 let imagensCarregadas = 0;
 let totalImagens = 5;
 
 // Placar
 let placar = document.querySelector("h3") || { textContent: "" };
 
-// ======= Ajuste do canvas =======
+
+// =========================
+// AJUSTE DO CANVAS
+// =========================
 function ajustarCanvas() {
     let w = window.innerWidth;
     let h = window.innerHeight;
@@ -45,7 +52,10 @@ function ajustarCanvas() {
 
 window.addEventListener("resize", ajustarCanvas);
 
-// ======= Factory Function =======
+
+// =========================
+// FACTORY FUNCTION
+// =========================
 function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
     let image = new Image();
     image.src = imageSrc;
@@ -100,7 +110,10 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
     return obj;
 }
 
-// ======= Movimento do fundo =======
+
+// =========================
+// MOVIMENTO DO FUNDO
+// =========================
 function move_bg(bg, bg2) {
     let step = 1 * scale;
     let limit = 1920 * scale;
@@ -112,7 +125,10 @@ function move_bg(bg, bg2) {
     if (bg2.position[0] <= -limit) bg2.position[0] = limit;
 }
 
-// ======= Movimento do peixe =======
+
+// =========================
+// MOVIMENTO DO PEIXE
+// =========================
 function move_peixe(peixe, g1, g2) {
     peixe.velocidade = (2 + (g1.pontos + g2.pontos) / (2 * peixe.x)) * scale;
 
@@ -149,14 +165,20 @@ function move_peixe(peixe, g1, g2) {
     if (peixe.velocidade >= 15 * scale) peixe.x++;
 }
 
-// ======= Objetos =======
+
+// =========================
+// OBJETOS
+// =========================
 let bg = criarObj("img_fundo/fundo2.png", 0, 0, 1920, 1080);
 let bg2 = criarObj("img_fundo/fundo2.png", 1920, 0, 1920, 1080);
 let gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
 let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 
-// ======= Eventos =======
+
+// =========================
+// EVENTOS
+// =========================
 canvas.addEventListener("mousemove", (event) => {
     destino = { x: event.clientX, y: event.clientY };
 });
@@ -167,7 +189,10 @@ canvas.addEventListener("touchmove", (event) => {
     event.preventDefault();
 });
 
-// ======= Loop =======
+
+// =========================
+// LOOP PRINCIPAL
+// =========================
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -192,9 +217,11 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// ======= Inicialização =======
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
 function initGame() {
     ajustarCanvas();
     requestAnimationFrame(gameLoop);
 }
-initGame();
