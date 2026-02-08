@@ -19,12 +19,20 @@ function resize() {
 }
 window.addEventListener("resize", resize);
 
-// ======= FUNÇÃO DEGRAU =======
+// ======= FUNÇÃO DEGRAU (VERSÃO ESTÁVEL) =======
 function degrau(x) {
     let e = Math.E ** (x * 0.2);
     let k = -((((x * 0.2) - 10) / e) ** 2);
-    return Math.E ** k * 1.8801;
+    let d = Math.E ** k * 1.8801;
+
+    //  LIMITADOR SEGURO (mantém comportamento original, mas evita explosões)
+    if (!isFinite(d)) d = 0;
+    d = Math.min(d, 1.5);   // limite máximo recomendado
+    d = Math.max(d, 0);     // evita valores negativos
+
+    return d;
 }
+
 
 // ======= OBJETO =======
 function Obj(img, x, y, w, h) {
@@ -117,6 +125,10 @@ function move_gaivota2() {
         let soma = gaivota.pontos + gaivota2.pontos;
 
         let fatorX = 0.0015 + soma / 3500 + (degrau(soma / 2) * Math.abs(gaivota.pontos - gaivota2.pontos)) / 100;
+
+        //  LIMITADOR FINAL (evita teletransporte da gaivota2)
+        fatorX = Math.min(fatorX, 0.05);
+
         let fatorY = 0.0002 + soma / 2000;
 
         gaivota2.x += (peixe.x - gaivota2.x) * fatorX;
