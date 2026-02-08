@@ -214,7 +214,8 @@ function gameLoop() {
 
 // ======= Inicialização =======
 function initGame() {
-    gameLoop();
+    //gameLoop();
+    requestAnimationFrame(gameLoop);
 }
 
 initGame();
