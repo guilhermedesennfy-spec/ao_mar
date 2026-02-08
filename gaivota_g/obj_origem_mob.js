@@ -156,18 +156,6 @@ let gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
 let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 
-// ======= Entrada do usuário =======
-let destino = null;
-
-canvas.addEventListener("mousemove", (e) => {
-    destino = { x: e.clientX, y: e.clientY };
-});
-
-canvas.addEventListener("touchmove", (e) => {
-    let t = e.touches[0];
-    destino = { x: t.clientX, y: t.clientY };
-    e.preventDefault();
-});
 
 // ======= Loop =======
 function gameLoop() {
@@ -175,6 +163,30 @@ function gameLoop() {
 
     bg.drawing(ctx);
     bg2.drawing(ctx);
+    gaivota.drawing(ctx);
+    gaivota2.drawing(ctx);
+    peixe.drawing(ctx);
+
+    gaivota.anim("img_gaivota/gaivota", 4, 6);
+    gaivota2.anim("img_gaivota2/gaivota", 4, 6);
+    peixe.anim("img_peixe/peixe", 6, 6);
+
+    move_bg(bg, bg2);
+
+
+    // ======= Entrada do usuário =======
+    let destino = null;
+
+    canvas.addEventListener("mousemove", (e) => {
+    destino = { x: e.clientX, y: e.clientY };
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+    let t = e.touches[0];
+    destino = { x: t.clientX, y: t.clientY };
+    e.preventDefault();
+    });
+
 
     if (destino) {
         gaivota.move(destino.x, destino.y);
@@ -190,15 +202,7 @@ function gameLoop() {
         );
     }
 
-    gaivota.drawing(ctx);
-    gaivota2.drawing(ctx);
-    peixe.drawing(ctx);
 
-    gaivota.anim("img_gaivota/gaivota", 4, 6);
-    gaivota2.anim("img_gaivota2/gaivota", 4, 6);
-    peixe.anim("img_peixe/peixe", 6, 6);
-
-    move_bg(bg, bg2);
     move_peixe(peixe, gaivota, gaivota2);
 
     placar.textContent =
