@@ -8,21 +8,35 @@ function degrau(x){
 
 }
 
-function Obj(image,x,y){
+ffunction Obj(image, x, y, width, height){
     
     var canvas = document.getElementById("canvas");
     var ctx =canvas.getContext("2d");
     this.image = new Image();
     this.image.src = image;
-    this.position= [x,y];
-    this.frame=1;
-    this.tick =0
-    this.pontos =0
-    this.velocidade = 0
+
+    
+    this.position = [x * scale, y * scale];
+
+
+    this.width = width * scale;
+    this.height = height * scale;
+
+    this.frame = 1;
+    this.tick = 0;
+    this.pontos = 0;
+    this.velocidade = 0;
     this.x =2
 
     this.drawing =function () {
-        ctx.drawImage(this.image,this.position[0],this.position[1])
+        ctx.drawImage(
+    this.image,
+    this.position[0],
+    this.position[1],
+    this.width,
+    this.height
+    );
+
         
     }
 
@@ -40,28 +54,28 @@ function Obj(image,x,y){
         }
         this.image.src=img+this.frame+'.png'
     }
-    this.move_gaivota = function(x,y){
-        this.position[0]= x-43
-        this.position[1]= y-47
-
+    this.move_gaivota = function(x, y){
+    this.position[0] = (x - 43) * scale;
+    this.position[1] = (y - 47) * scale;
     }
+
     this.move_gaivota2 = function(x,y){
-        this.position[0]= x
-        this.position[1]= y
+        this.position[0]= x* scale
+        this.position[1]= y* scale
     }
 }
 function move_bg(bg,bg2){
-    if (bg.position[0]>-773){
-        bg.position[0] -=1
+    if (bg.position[0]>-773* scale){
+        bg.position[0] -=1* scale
     }
-    if (bg.position[0]==-773){
-        bg.position[0]=0;
+    if (bg.position[0]==-773* scale){
+        bg.position[0]=0* scale;
     }
-    if (bg2.position[0]>0){
-        bg2.position[0] -=1
+    if (bg2.position[0]>0* scale){
+        bg2.position[0] -=1* scale
     }
-    if (bg2.position[0]==0){
-        bg2.position[0]=774;
+    if (bg2.position[0]==0* scale){
+        bg2.position[0]=774* scale;
     }
     
 }
