@@ -199,4 +199,4 @@ function initGame() {
 
     requestAnimationFrame(gameLoop);
 }
-initGame();
+initGame()
