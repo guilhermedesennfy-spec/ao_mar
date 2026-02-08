@@ -216,7 +216,7 @@ function gameLoop() {
     placar.textContent =
         "Gaivota1: " + gaivota.pontos + " | Gaivota2: " + gaivota2.pontos;
 
-    requestAnimationFrame(gameLoop);
+    //requestAnimationFrame(gameLoop);
 }
 
 // ======= Inicialização =======
