@@ -1,6 +1,7 @@
 // ======= Configuração base =======
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 const BASE_WIDTH = 1920;
 const BASE_HEIGHT = 1080;
@@ -15,10 +16,28 @@ function ajustarCanvas() {
     const w = window.innerWidth;
     const h = window.innerHeight;
 
+    const isPortrait = h > w;
+    const warning = document.getElementById("rotate-warning");
+
+    if (isMobile && isPortrait) {
+        warning.style.display = "flex";
+        canvas.style.display = "none";
+        return;
+    }
+
+    warning.style.display = "none";
+    canvas.style.display = "block";
+
     canvas.width = w;
     canvas.height = h;
 
     scale = Math.min(w / BASE_WIDTH, h / BASE_HEIGHT);
+
+    if (bg?.rescale) bg.rescale();
+    if (bg2?.rescale) bg2.rescale();
+    if (gaivota?.rescale) gaivota.rescale();
+    if (gaivota2?.rescale) gaivota2.rescale();
+    if (peixe?.rescale) peixe.rescale();
 }
 window.addEventListener("resize", ajustarCanvas);
 ajustarCanvas();
@@ -199,4 +218,4 @@ function initGame() {
 
     requestAnimationFrame(gameLoop);
 }
-initGame()
+initGame();
