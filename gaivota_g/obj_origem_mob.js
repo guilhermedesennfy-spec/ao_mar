@@ -211,7 +211,7 @@ function gameLoop() {
         );
     }
 
-    //move_peixe(peixe, gaivota, gaivota2);
+    move_peixe(peixe, gaivota, gaivota2);
 
     placar.textContent =
         "Gaivota1: " + gaivota.pontos + " | Gaivota2: " + gaivota2.pontos;
