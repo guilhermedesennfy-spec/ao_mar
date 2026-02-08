@@ -175,7 +175,7 @@ canvas.addEventListener("touchmove", (e) => {
 
 // ======= Loop =======
 function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Reescala sempre
     //bg.rescale();
