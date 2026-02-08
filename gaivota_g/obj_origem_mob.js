@@ -81,7 +81,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
             this.height = this.baseH * scale;
         },
 
-        drawing() {//ctx
+        drawing(ctx) {//ctx
             ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
         },
 
@@ -159,26 +159,7 @@ let bg2 = criarObj("img_fundo/fundo2.png", 1920, 0, 1920, 1080);
 let gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
 let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
-
-
-// ======= Loop =======
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    bg.drawing();
-    bg2.drawing();
-    gaivota.drawing();
-    gaivota2.drawing();
-    peixe.drawing();
-
-    gaivota.anim("img_gaivota/gaivota", 4, 6);
-    gaivota2.anim("img_gaivota2/gaivota", 4, 6);
-    peixe.anim("img_peixe/peixe", 6, 6);
-
-    move_bg(bg, bg2);
-
-
-    // ======= Entrada do usuário =======
+// ======= Entrada do usuário =======
     let destino = null;
 
     canvas.addEventListener("mousemove", (e) => {
@@ -190,6 +171,25 @@ function gameLoop() {
     destino = { x: t.clientX, y: t.clientY };
     e.preventDefault();
     });
+
+// ======= Loop =======
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    bg.drawing(ctx);
+    bg2.drawing(ctx);
+    gaivota.drawing(ctx);
+    gaivota2.drawing(ctx);
+    peixe.drawing(ctx);
+
+    gaivota.anim("img_gaivota/gaivota", 4, 6);
+    gaivota2.anim("img_gaivota2/gaivota", 4, 6);
+    peixe.anim("img_peixe/peixe", 6, 6);
+
+    move_bg(bg, bg2);
+
+
+    
 
 
     if (destino) {
