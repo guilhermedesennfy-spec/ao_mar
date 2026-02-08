@@ -165,11 +165,11 @@ let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    bg.drawing(ctx);
-    bg2.drawing(ctx);
-    gaivota.drawing(ctx);
-    gaivota2.drawing(ctx);
-    peixe.drawing(ctx);
+    bg.drawing();
+    bg2.drawing();
+    gaivota.drawing();
+    gaivota2.drawing();
+    peixe.drawing();
 
     gaivota.anim("img_gaivota/gaivota", 4, 6);
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
