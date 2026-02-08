@@ -162,19 +162,19 @@ let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 
 // ======= Eventos (fora do loop, mas lidos no loop) =======
-canvas.addEventListener("mousemove", (e) => {
-    destino = { x: e.clientX, y: e.clientY };
+canvas.addEventListener("mousemove", (event) => {
+    destino = { x: event.clientX, y: event.clientY };
 });
 
-canvas.addEventListener("touchmove", (e) => {
-    let t = e.touches[0];
+canvas.addEventListener("touchmove", (event) => {
+    let t = event.touches[0];
     destino = { x: t.clientX, y: t.clientY };
-    e.preventDefault();
+    event.preventDefault();
 });
 
 // ======= Loop =======
 function gameLoop() {
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Reescala sempre
     bg.rescale();
@@ -196,19 +196,19 @@ function gameLoop() {
     move_bg(bg, bg2);
 
     // Entrada do usuário lida no loop
-    if (destino) {
-        gaivota.move(destino.x, destino.y);
-    }
+    //if (destino) {
+    //    gaivota.move(destino.x, destino.y);
+    //}
 
-    if (peixe.position[1] <= 560 * scale) {
-        let fatorX = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500;
-        let fatorY = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
+   // if (peixe.position[1] <= 560 * scale) {
+    //    let fatorX = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500;
+    //    let fatorY = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
 
-        gaivota2.move(
-            peixe.position[0] * fatorX + gaivota2.position[0],
-            peixe.position[1] * fatorY + gaivota2.position[1]
-        );
-    }
+   //     gaivota2.move(
+   //         peixe.position[0] * fatorX + gaivota2.position[0],
+   //         peixe.position[1] * fatorY + gaivota2.position[1]
+   //     );
+   // }
 
     move_peixe(peixe, gaivota, gaivota2);
 
