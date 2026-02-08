@@ -101,7 +101,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
         }
     };
 
-    //image.onload = () => obj.rescale();
+    image.onload = () => obj.rescale();
 
     return obj;
 }
@@ -201,7 +201,7 @@ function gameLoop() {
         gaivota.move(destino.x, destino.y);
     }
 
-   if (peixe.position[1] <= 560 * scale) {
+    if (peixe.position[1] <= 560 * scale) {
         let fatorX = 0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500;
         let fatorY = 0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000;
 
