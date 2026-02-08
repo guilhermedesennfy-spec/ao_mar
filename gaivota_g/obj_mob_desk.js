@@ -103,11 +103,11 @@ function move_peixe(peixe, gaivota, gaivota2) {
 }
 
 // ======= Objetos (mesmas posições lógicas do script antigo) =======
-const bg = criarObj("img_fundo/fundo2.png", 0, 0);
-const bg2 = criarObj("img_fundo/fundo2.png", 774, 0);
-const gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200);
-const gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200);
-const peixe = criarObj("img_peixe/peixe1.png", 774 * Math.random(), 750);
+const bg = new criarObj("img_fundo/fundo2.png", 0, 0);
+const bg2 = new criarObj("img_fundo/fundo2.png", 774, 0);
+const gaivota =new criarObj("img_gaivota/gaivota1.png", 100, 200);
+const gaivota2 =new criarObj("img_gaivota2/gaivota1.png", 400, 200);
+const peixe = new criarObj("img_peixe/peixe1.png", 774 * Math.random(), 750);
 
 // ======= Eventos de entrada (mouse + touch) =======
 canvas.addEventListener("mousemove", (e) => {
@@ -209,7 +209,7 @@ function gameLoop() {
         " | Gaivota2: " +
         gaivota2.pontos;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //requestAnimationFrame(gameLoop);
+    requestAnimationFrame(gameLoop);
 }
 
 // ======= Inicialização =======
