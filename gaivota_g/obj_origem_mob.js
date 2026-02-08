@@ -197,3 +197,4 @@ function initGame() {
     ajustarCanvas();
     requestAnimationFrame(gameLoop);
 }
+initGame();
