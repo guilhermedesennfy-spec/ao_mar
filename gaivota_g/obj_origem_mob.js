@@ -162,19 +162,19 @@ let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 
 // ======= Eventos (fora do loop, mas lidos no loop) =======
-canvas.addEventListener("mousemove", (event) => {
-    destino = { x: event.clientX, y: event.clientY };
+canvas.addEventListener("mousemove", (e) => {
+    destino = { x: e.clientX, y: e.clientY };
 });
 
-canvas.addEventListener("touchmove", (event) => {
-    let t = event.touches[0];
+canvas.addEventListener("touchmove", (e) => {
+    let t = e.touches[0];
     destino = { x: t.clientX, y: t.clientY };
     event.preventDefault();
 });
 
 // ======= Loop =======
 function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Reescala sempre
     bg.rescale();
