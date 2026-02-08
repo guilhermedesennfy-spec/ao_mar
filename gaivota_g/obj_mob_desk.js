@@ -208,7 +208,7 @@ function gameLoop() {
         gaivota.pontos +
         " | Gaivota2: " +
         gaivota2.pontos;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     requestAnimationFrame(gameLoop);
 }
 
