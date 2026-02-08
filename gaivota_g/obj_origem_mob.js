@@ -1,4 +1,4 @@
-
+ 
 // ======= Configuração base =======
 let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let canvas = document.getElementById("canvas");
@@ -126,11 +126,11 @@ function move_peixe(peixe, g1, g2) {
 }
 
 // ======= Objetos =======
-let bg = criarObj("img_fundo/fundo2.png", 0, 0, 1920, 1080);
-let bg2 = criarObj("img_fundo/fundo2.png", 1920, 0, 1920, 1080);
-let gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
-let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
-let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
+let bg = new criarObj("img_fundo/fundo2.png", 0, 0, 1920, 1080);
+let bg2 = new criarObj("img_fundo/fundo2.png", 1920, 0, 1920, 1080);
+let gaivota =new  criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
+let gaivota2 =new criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
+let peixe = new criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
 
 // ======= Eventos (fora do loop, mas lidos no loop) =======
 canvas.addEventListener("mousemove", (e) => {
