@@ -221,11 +221,11 @@ function gameLoop() {
 
 // ======= Inicialização =======
 function initGame() {
-    bg.rescale();
-    bg2.rescale();
-    gaivota.rescale();
-    gaivota2.rescale();
-    peixe.rescale();
+    //bg.rescale();
+    //bg2.rescale();
+    //gaivota.rescale();
+    //gaivota2.rescale();
+    //peixe.rescale();
 
     requestAnimationFrame(gameLoop);
 }
