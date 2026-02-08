@@ -138,11 +138,9 @@ function move_gaivota2() {
 
 // ======= LOOP =======
 function loop() {
-    ctx.clearRect(0, 0, W, H);
+    
 
-    move_bg();
-    move_peixe();
-    move_gaivota2();
+    
 
     gaivota.x = destino.x - 40;
     gaivota.y = destino.y - 40;
@@ -157,7 +155,12 @@ function loop() {
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
 
+    move_bg();
+    move_peixe();
+    move_gaivota2();
+
     placar.textContent = `Gaivota1: ${gaivota.pontos} | Gaivota2: ${gaivota2.pontos}`;
+    ctx.clearRect(0, 0, W, H);
 
     requestAnimationFrame(loop);
 }
