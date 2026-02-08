@@ -101,7 +101,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
         }
     };
 
-    image.onload = () => obj.rescale();
+    //image.onload = () => obj.rescale();
 
     return obj;
 }
@@ -175,7 +175,7 @@ canvas.addEventListener("touchmove", (e) => {
 
 // ======= Loop =======
 function gameLoop() {
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Reescala sempre
     //bg.rescale();
