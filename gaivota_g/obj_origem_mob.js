@@ -3,7 +3,6 @@ let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-
 let BASE_WIDTH = 1920;
 let BASE_HEIGHT = 1080;
 
@@ -11,6 +10,9 @@ let scale = 1;
 
 // Placar
 let placar = document.querySelector("h3") || { textContent: "" };
+
+// Variável global para entrada do usuário
+let destino = null;
 
 // ======= Ajuste do canvas =======
 function ajustarCanvas() {
@@ -53,9 +55,6 @@ function degrau(x) {
 
 // ======= Factory Function para Objetos =======
 function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
-    let canvas = document.getElementById("canvas");
-    let ctx = canvas.getContext("2d");
-
     let image = new Image();
     image.src = imageSrc;
 
@@ -81,7 +80,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
             this.height = this.baseH * scale;
         },
 
-        drawing(ctx) {//ctx
+        drawing(ctx) {
             ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
         },
 
@@ -100,6 +99,8 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
             this.position[1] = y - this.height / 2;
         }
     };
+
+    image.onload = () => obj.rescale();
 
     return obj;
 }
@@ -159,22 +160,28 @@ let bg2 = criarObj("img_fundo/fundo2.png", 1920, 0, 1920, 1080);
 let gaivota = criarObj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
 let gaivota2 = criarObj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 let peixe = criarObj("img_peixe/peixe1.png", Math.random() * 774, 750, 64, 48);
-// ======= Entrada do usuário =======
-    let destino = null;
 
-    canvas.addEventListener("mousemove", (e) => {
+// ======= Eventos (fora do loop, mas lidos no loop) =======
+canvas.addEventListener("mousemove", (e) => {
     destino = { x: e.clientX, y: e.clientY };
-    });
+});
 
-    canvas.addEventListener("touchmove", (e) => {
+canvas.addEventListener("touchmove", (e) => {
     let t = e.touches[0];
     destino = { x: t.clientX, y: t.clientY };
     e.preventDefault();
-    });
+});
 
 // ======= Loop =======
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Reescala sempre
+    bg.rescale();
+    bg2.rescale();
+    gaivota.rescale();
+    gaivota2.rescale();
+    peixe.rescale();
 
     bg.drawing(ctx);
     bg2.drawing(ctx);
@@ -188,10 +195,7 @@ function gameLoop() {
 
     move_bg(bg, bg2);
 
-
-    
-
-
+    // Entrada do usuário lida no loop
     if (destino) {
         gaivota.move(destino.x, destino.y);
     }
@@ -205,7 +209,6 @@ function gameLoop() {
             peixe.position[1] * fatorY + gaivota2.position[1]
         );
     }
-
 
     move_peixe(peixe, gaivota, gaivota2);
 
