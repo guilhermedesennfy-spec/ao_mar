@@ -97,7 +97,7 @@ function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
         }
     };
 
-    //return obj;
+    return obj;
 }
 
 // ======= Movimento do fundo =======
