@@ -1,12 +1,25 @@
-
 html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    touch-action: none;
     height: 100%;
     width: 100%;
+}
+
+#rotate-warning {
+    display: none;
     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: white;
+    font-size: 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
 }
 
 canvas {
@@ -19,18 +32,16 @@ canvas {
     background: #000;
 }
 
-
 h3 {
     position: fixed;
-    top: 2vh;        
+    top: 2vh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
     color: white;
-    font-size: 2vh;  
+    font-size: 2vh;
     font-family: sans-serif;
     background: rgba(0, 0, 0, 0.5);
     padding: 1vh 2vw;
     border-radius: 1vh;
 }
-
