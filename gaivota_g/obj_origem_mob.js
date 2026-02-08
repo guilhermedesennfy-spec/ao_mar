@@ -1,7 +1,8 @@
 // ======= Configuração base =======
+let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 
 let BASE_WIDTH = 1920;
 let BASE_HEIGHT = 1080;
@@ -52,6 +53,9 @@ function degrau(x) {
 
 // ======= Factory Function para Objetos =======
 function criarObj(imageSrc, baseX, baseY, baseW = 64, baseH = 48) {
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+
     let image = new Image();
     image.src = imageSrc;
 
