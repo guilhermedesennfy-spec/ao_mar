@@ -149,9 +149,9 @@ function loop() {
     });
 
     canvas.addEventListener("touchmove", e => {
-    //let t = e.touches[0];
-    destino.x = e.touches[0][0]//t.clientX;
-    destino.y =e.touches[0][1] //t.clientY;
+    let t = e.touches[0];
+    destino.x = t.clientX;
+    destino.y =t.clientY;
     e.preventDefault();
     });
 
