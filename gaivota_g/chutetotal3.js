@@ -19,7 +19,13 @@ function resize() {
 }
 window.addEventListener("resize", resize);
 
-// ======= FUNÇÃO DEGRAU (VERSÃO ESTÁVEL) =======
+// ======= DETECTAR MOBILE =======
+const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
+// flags para evitar adicionar listeners repetidos
+let eventosConfigurados = false;
+
+// ======= FUNÇÃO DEGRAU =======
 function degrau(x) {
     let e = Math.E ** (x * 0.2);
     let k = -((((x * 0.2) - 10) / e) ** 2);
@@ -69,19 +75,6 @@ let gaivota = Obj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
 let gaivota2 = Obj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 
 let peixe = Obj("img_peixe/peixe1.png", Math.random() * W, H - 100, 64, 48);
-
-// ======= CONTROLES =======
-canvas.addEventListener("mousemove", e => {
-    destino.x = e.clientX;
-    destino.y = e.clientY;
-});
-
-canvas.addEventListener("touchmove", e => {
-    let t = e.touches[0];
-    destino.x = t.clientX;
-    destino.y = t.clientY;
-    e.preventDefault();
-});
 
 // ======= FUNDO =======
 function move_bg() {
@@ -133,6 +126,30 @@ function move_gaivota2() {
 // ======= LOOP =======
 function loop() {
 
+    // ======= EVENTOS DENTRO DO LOOP (COM IF) =======
+    if (!eventosConfigurados) {
+
+        if (!isMobile) {
+            // DESKTOP
+            canvas.addEventListener("mousemove", e => {
+                destino.x = e.clientX;
+                destino.y = e.clientY;
+            });
+
+        } else {
+            // MOBILE
+            canvas.addEventListener("touchmove", e => {
+                let t = e.touches[0];
+                destino.x = t.clientX;
+                destino.y = t.clientY;
+                e.preventDefault();
+            });
+        }
+
+        eventosConfigurados = true; // evita repetir
+    }
+
+    // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
 
     gaivota.x = destino.x - 40;
