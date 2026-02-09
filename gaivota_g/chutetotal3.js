@@ -127,16 +127,15 @@ function move_gaivota2() {
 function loop() {
 
     // ======= EVENTOS DENTRO DO LOOP (COM IF) =======
-    if (!eventosConfigurados) {
+    //if (!eventosConfigurados) {
+    if (!isMobile) {
+    // DESKTOP
+     canvas.addEventListener("mousemove", e => {
+     destino.x = e.clientX;
+     destino.y = e.clientY;
+    });
 
-        if (!isMobile) {
-            // DESKTOP
-            canvas.addEventListener("mousemove", e => {
-                destino.x = e.clientX;
-                destino.y = e.clientY;
-            });
-
-        } else {
+    } else {
             // MOBILE
             canvas.addEventListener("touchmove", e => {
                 let t = e.touches[0];
@@ -144,10 +143,12 @@ function loop() {
                 destino.y = t.clientY;
                 e.preventDefault();
             });
-        }
-
-        eventosConfigurados = true; // evita repetir
     }
+
+
+
+        //eventosConfigurados = true; // evita repetir
+    //}
 
     // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
