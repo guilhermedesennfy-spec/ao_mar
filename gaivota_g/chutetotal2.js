@@ -78,12 +78,12 @@ canvas.addEventListener("mousemove", e => {
     destino.y = e.clientY;
 });
 
-canvas.addEventListener("touchmove", e => {
-    let t = e.touches[0];
-    destino.x = t.clientX;
-    destino.y = t.clientY;
-    e.preventDefault();
-});
+//canvas.addEventListener("touchmove", e => {
+//    let t = e.touches[0];
+//    destino.x = t.clientX;
+//    destino.y = t.clientY;
+//    e.preventDefault();
+//});
 
 // ======= FUNDO =======
 function move_bg() {
@@ -148,12 +148,12 @@ function loop() {
     destino.y = e.clientY;
     });
 
-    //canvas.addEventListener("touchmove", e => {
+    canvas.addEventListener("touchmove", e => {
     //let t = e.touches[0];
-    //destino.x = t.clientX;
-    //destino.y = t.clientY;
-    //e.preventDefault();
-    //});
+    destino.x = e.touches[0][0]//t.clientX;
+    destino.y =e.touches[0][1] //t.clientY;
+    e.preventDefault();
+    });
 
     gaivota.x = destino.x - 40;
     gaivota.y = destino.y - 40;
