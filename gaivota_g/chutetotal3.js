@@ -126,29 +126,6 @@ function move_gaivota2() {
 // ======= LOOP =======
 function loop() {
 
-    // ======= EVENTOS DENTRO DO LOOP (COM IF) =======
-    //if (!eventosConfigurados) {
-    if (!isMobile) {
-    // DESKTOP
-     canvas.addEventListener("mousemove", e => {
-     destino.x = e.clientX;
-     destino.y = e.clientY;
-    });
-
-    } else {
-            // MOBILE
-            canvas.addEventListener("touchmove", e => {
-                let t = e.touches[0];
-                destino.x = t.clientX;
-                destino.y = t.clientY;
-                e.preventDefault();
-            });
-    }
-
-
-
-        //eventosConfigurados = true; // evita repetir
-    //}
 
     // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
@@ -161,14 +138,38 @@ function loop() {
     gaivota.draw();
     gaivota2.draw();
     peixe.draw();
+    move_bg();
 
     gaivota.anim("img_gaivota/gaivota", 4, 6);
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
-
-    move_bg();
-    move_peixe();
     move_gaivota2();
+
+    // ======= EVENTOS DENTRO DO LOOP (COM IF) =======
+    //if (!eventosConfigurados) {
+    if (!isMobile) {
+    // DESKTOP
+        canvas.addEventListener("mousemove", e => {
+        destino.x = e.clientX;
+        destino.y = e.clientY;
+    });} else {// MOBILE
+        canvas.addEventListener("touchmove", e => {
+        let t = e.touches[0];
+        destino.x = t.clientX;
+        destino.y = t.clientY;
+        e.preventDefault();});
+    }
+
+
+
+        //eventosConfigurados = true; // evita repetir
+    //}
+
+
+
+    
+    move_peixe();
+    
 
     placar.textContent = `Gaivota1: ${gaivota.pontos} | Gaivota2: ${gaivota2.pontos}`;
 
