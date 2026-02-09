@@ -1,3 +1,5 @@
+// ======= DETECTAR MOBILE =======
+const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
 // ======= CONFIGURAÇÃO =======
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -19,11 +21,10 @@ function resize() {
 }
 window.addEventListener("resize", resize);
 
-// ======= DETECTAR MOBILE =======
-const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
 
 // flags para evitar adicionar listeners repetidos
-let eventosConfigurados = false;
+//let eventosConfigurados = false;
 
 // ======= FUNÇÃO DEGRAU =======
 function degrau(x) {
@@ -68,13 +69,13 @@ function Obj(img, x, y, w, h) {
 }
 
 // ======= OBJETOS =======
-let bg = Obj("img_fundo/fundo2.png", 0, 0, W, H);
-let bg2 = Obj("img_fundo/fundo2.png", W, 0, W, H);
+let bg = new Obj("img_fundo/fundo2.png", 0, 0, W, H);
+let bg2 = new  Obj("img_fundo/fundo2.png", W, 0, W, H);
 
-let gaivota = Obj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
-let gaivota2 = Obj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
+let gaivota = new  Obj("img_gaivota/gaivota1.png", 100, 200, 120, 80);
+let gaivota2 = new  Obj("img_gaivota2/gaivota1.png", 400, 200, 120, 80);
 
-let peixe = Obj("img_peixe/peixe1.png", Math.random() * W, H - 100, 64, 48);
+let peixe =  new Obj("img_peixe/peixe1.png", Math.random() * W, H - 100, 64, 48);
 
 // ======= FUNDO =======
 function move_bg() {
@@ -177,4 +178,4 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
-loop();
+loop()
