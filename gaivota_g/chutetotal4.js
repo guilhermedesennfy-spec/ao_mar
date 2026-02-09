@@ -22,9 +22,6 @@ function resize() {
 }
 window.addEventListener("resize", resize);
 
-// ======= FLAGS =======
-let listenersAtivos = false;
-
 // ======= FUNÇÃO DEGRAU =======
 function degrau(x) {
     let e = Math.E ** (x * 0.2);
@@ -32,7 +29,10 @@ function degrau(x) {
     let d = Math.E ** k * 1.8801;
 
     if (!isFinite(d)) d = 0;
-    return Math.max(0, Math.min(d, 1.5));
+    d = Math.min(d, 1.5);
+    d = Math.max(d, 0);
+
+    return d;
 }
 
 // ======= OBJETO =======
@@ -53,10 +53,12 @@ function Obj(img, x, y, w, h) {
         },
 
         anim(prefix, tickLimit, frames) {
-            if (++this.tick >= tickLimit) {
+            this.tick++;
+            if (this.tick >= tickLimit) {
                 this.tick = 0;
-                this.frame = (this.frame % frames) + 1;
-                this.image.src = `${prefix}${this.frame}.png`;
+                this.frame++;
+                if (this.frame > frames) this.frame = 1;
+                this.image.src = prefix + this.frame + ".png";
             }
         }
     };
@@ -118,10 +120,10 @@ function move_gaivota2() {
     }
 }
 
-// ======= ATIVAR EVENTOS (APENAS UMA VEZ) =======
-function ativarEventos() {
-    if (listenersAtivos) return;
+// ======= LOOP =======
+function loop() {
 
+    // ======= EVENTOS DENTRO DO LOOP (SEMPRE ADICIONADOS) =======
     if (!isMobile) {
         canvas.addEventListener("mousemove", e => {
             destino.x = e.clientX;
@@ -135,15 +137,6 @@ function ativarEventos() {
             e.preventDefault();
         });
     }
-
-    listenersAtivos = true;
-}
-
-// ======= LOOP =======
-function loop() {
-
-    // checar listeners dentro do loop (mas só ativar 1 vez)
-    ativarEventos();//if (!listenersAtivos) 
 
     // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
