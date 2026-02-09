@@ -130,8 +130,7 @@ function loop() {
     // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
 
-    gaivota.x = destino.x - 40;
-    gaivota.y = destino.y - 40;
+
 
     bg.draw();
     bg2.draw();
@@ -159,6 +158,8 @@ function loop() {
         destino.y = t.clientY;
         e.preventDefault();});
     }
+    gaivota.x = destino.x - 40;
+    gaivota.y = destino.y - 40;
 
 
 
