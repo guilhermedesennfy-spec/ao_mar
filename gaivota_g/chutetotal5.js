@@ -204,13 +204,13 @@ function loop() {
     canvas.addEventListener("mousemove", e => {
         destino.x = e.clientX;
         destino.y = e.clientY;
-    });}else(canvas.addEventListener("touchstart", e => {
+    });}else{(canvas.addEventListener("touchstart", e => {
         const t = e.touches[0];
         if (t) {
             destino.x = t.clientX;
             destino.y = t.clientY;
         }
-    }, { passive: true });)
+    }, { passive: true });)}
 
     move_gaivota2();
 
