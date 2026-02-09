@@ -78,12 +78,12 @@ canvas.addEventListener("mousemove", e => {
     destino.y = e.clientY;
 });
 
-//canvas.addEventListener("touchmove", e => {
-//    let t = e.touches[0];
-//    destino.x = t.clientX;
-//    destino.y = t.clientY;
-//    e.preventDefault();
-//});
+canvas.addEventListener("touchmove", e => {
+    let t = e.touches[0];
+    destino.x = t.clientX;
+    destino.y = t.clientY;
+    e.preventDefault();
+});
 
 // ======= FUNDO =======
 function move_bg() {
