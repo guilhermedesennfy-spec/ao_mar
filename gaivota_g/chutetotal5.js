@@ -200,17 +200,17 @@ function loop() {
     gaivota2.anim("img_gaivota2/gaivota", 4, 6);
     peixe.anim("img_peixe/peixe", 6, 6);
 
-    if (!isMobile){// mouse
-    canvas.addEventListener("mousemove", e => {
-        destino.x = e.clientX;
-        destino.y = e.clientY;
-    });}else{(canvas.addEventListener("touchstart", e => {
-        const t = e.touches[0];
-        if (t) {
-            destino.x = t.clientX;
-            destino.y = t.clientY;
-        }
-    }, { passive: true });)}
+    //if (!isMobile){// mouse
+    //canvas.addEventListener("mousemove", e => {
+    //    destino.x = e.clientX;
+    //    destino.y = e.clientY;
+    //});}else{(canvas.addEventListener("touchstart", e => {
+    //    const t = e.touches[0];
+    //    if (t) {
+     //       destino.x = t.clientX;
+    //        destino.y = t.clientY;
+    //    }
+    //}, { passive: true });)}
 
     move_gaivota2();
 
