@@ -122,21 +122,22 @@ function move_gaivota2() {
 
 // ======= LOOP =======
 function loop() {
-
+    destino.x =200;
+    destino.y =200;
     // ======= EVENTOS DENTRO DO LOOP (SEMPRE ADICIONADOS) =======
-    if (!isMobile) {
-        canvas.addEventListener("mousemove", e => {
-            destino.x = e.clientX;
-            destino.y = e.clientY;
-        });
-    } else {
-        canvas.addEventListener("touchmove", e => {
-            let t = e.touches[0];
-            destino.x = t.clientX;
-            destino.y = t.clientY;
-            e.preventDefault();
-        });
-    }
+    //if (!isMobile) {
+    //    canvas.addEventListener("mousemove", e => {
+    //        destino.x = e.clientX;
+    //        destino.y = e.clientY;
+    //    });
+   // } else {
+    //    canvas.addEventListener("touchmove", e => {
+    //        let t = e.touches[0];
+    //        destino.x = t.clientX;
+    //        destino.y = t.clientY;
+    //        e.preventDefault();
+    //    });
+   // }
 
     // ======= DESENHO =======
     ctx.clearRect(0, 0, W, H);
