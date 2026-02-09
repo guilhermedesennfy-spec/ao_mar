@@ -140,7 +140,20 @@ function move_gaivota2() {
 function loop() {
     
 
-    
+    ctx.clearRect(0, 0, W, H);
+
+    // ======= CONTROLES =======
+    canvas.addEventListener("mousemove", e => {
+    destino.x = e.clientX;
+    destino.y = e.clientY;
+    });
+
+canvas.addEventListener("touchmove", e => {
+    let t = e.touches[0];
+    destino.x = t.clientX;
+    destino.y = t.clientY;
+    e.preventDefault();
+});
 
     gaivota.x = destino.x - 40;
     gaivota.y = destino.y - 40;
@@ -160,7 +173,7 @@ function loop() {
     move_gaivota2();
 
     placar.textContent = `Gaivota1: ${gaivota.pontos} | Gaivota2: ${gaivota2.pontos}`;
-    ctx.clearRect(0, 0, W, H);
+    
 
     requestAnimationFrame(loop);
 }
