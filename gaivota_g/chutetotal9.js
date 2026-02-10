@@ -3,7 +3,7 @@ const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAg
 
 // ======= CONFIGURAÇÃO DO CANVAS E ESCALA =======
 const BASE_W = 800;
-const BASE_H = 600;
+const BASE_H = 1200;
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -129,6 +129,7 @@ var placar = document.querySelector("h3");
 
 // ======= LOOP DO JOGO =======
 function jogo(){
+    ctx.clearRect(0, 0, W, H);
     bg.drawing();
     bg2.drawing();
     gaivota.drawing();
