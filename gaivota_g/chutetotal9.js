@@ -3,7 +3,7 @@ const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAg
 
 // ======= CONFIGURAÇÃO DO CANVAS E ESCALA =======
 const BASE_W = 800;
-const BASE_H = 1200;
+const BASE_H = 2000;
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
