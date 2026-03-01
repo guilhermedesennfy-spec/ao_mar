@@ -19,7 +19,7 @@ const H = canvas.height;
 const scaleX = W / BASE_W;
 const scaleY = H / BASE_H;
 
-const scale = Math.min(scaleX, scaleY);
+const scale = (Math.min(scaleX, scaleY)+Math.max(scaleX, scaleY))/2;
 
 // ======= FUNÇÃO DEGRAU ORIGINAL =======
 function degrau(x){
@@ -45,8 +45,8 @@ function Obj(image, x, y){
             this.image,
             this.position[0],
             this.position[1],
-            this.image.width * scale*W,
-            this.image.height * scale*H
+            this.image.width * scale,
+            this.image.height * scale
         );
     };
 
