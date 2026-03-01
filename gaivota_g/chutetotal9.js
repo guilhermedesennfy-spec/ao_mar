@@ -41,13 +41,22 @@ function Obj(image, x, y){
     this.x = 2;
 
     this.drawing = function(){
+        if (this.image.src = "img/bg.png"){
+            ctx.drawImage(
+            this.image,
+            this.position[0],
+            this.position[1],
+            this.image.width * scale,
+            H//this.image.height * scale
+        );
+        }else{
         ctx.drawImage(
             this.image,
             this.position[0],
             this.position[1],
             this.image.width * scale,
-            H*sacale//this.image.height * scale
-        );
+            this.image.height * scale
+        );}
     };
 
     this.anim = function(img, tick, frames){
