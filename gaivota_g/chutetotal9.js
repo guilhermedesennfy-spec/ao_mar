@@ -41,7 +41,7 @@ function Obj(image, x, y){
     this.x = 2;
 
     this.drawing = function(){
-        if ((this.image.src =="img_fundo/fundo.png")){
+        if ((this.image ==bg)){
             ctx.drawImage(
             this.image,
             this.position[0],
@@ -49,7 +49,7 @@ function Obj(image, x, y){
             this.image.width * scale,
             H//this.image.height * scale
         );
-        }else if((this.image.src =="img_fundo/fundo2.png")){
+        }else if((this.image ==bg2)){
             ctx.drawImage(
             this.image,
             this.position[0],
