@@ -19,7 +19,7 @@ const H = canvas.height;
 const scaleX = W / BASE_W;
 const scaleY = H / BASE_H;
 
-const scale = (Math.min(scaleX*1.2, scaleY*1.2));
+const scale = (Math.min(scaleX*1.5, scaleY*1.5));
 
 // ======= FUNÇÃO DEGRAU ORIGINAL =======
 function degrau(x){
@@ -46,16 +46,16 @@ function Obj(image, x, y){
             this.image,
             this.position[0],
             this.position[1],
-            this.image.width * scale,
-            H//this.image.height * scale
+            W,H//this.image.width * scale,
+            //this.image.height * scale
         );
         }else if((this.image ==bg2.image)){
             ctx.drawImage(
             this.image,
             this.position[0],
             this.position[1],
-            this.image.width * scale,
-            H//this.image.height * scale
+            W,H//this.image.width * scale,
+            //this.image.height * scale
         );}else{
         ctx.drawImage(
             this.image,
