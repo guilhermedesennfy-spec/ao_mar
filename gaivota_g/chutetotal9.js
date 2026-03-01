@@ -16,8 +16,8 @@ const H = canvas.height;
 
 //const scaleX = W / BASE_W;
 //const scaleY = H / BASE_H;
-const scaleX = W / BASE_W;
-const scaleY = H / BASE_H;
+const scaleX = W // BASE_W;
+const scaleY = H // BASE_H;
 
 const scale = Math.min(scaleX, scaleY);
 
