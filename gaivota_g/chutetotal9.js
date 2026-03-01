@@ -16,10 +16,10 @@ const H = canvas.height;
 
 //const scaleX = W / BASE_W;
 //const scaleY = H / BASE_H;
-const scaleX = W // BASE_W;
-const scaleY = H // BASE_H;
+const scaleX = W / BASE_W;
+const scaleY = H / BASE_H;
 
-const scale = Math.max(scaleX, scaleY);
+const scale = Math.min(scaleX, scaleY);
 
 // ======= FUNÇÃO DEGRAU ORIGINAL =======
 function degrau(x){
@@ -45,8 +45,8 @@ function Obj(image, x, y){
             this.image,
             this.position[0],
             this.position[1],
-            this.image.width * scale,
-            this.image.height * scale
+            this.image.width * scale*W,
+            this.image.height * scale*H
         );
     };
 
@@ -162,7 +162,7 @@ function jogo(){
       });
     }
 
-    if (peixe.position[1] <= 560 * scale){
+    if (peixe.position[1] <= H * scale){
         gaivota2.move_gaivota2(
             (peixe.position[0] - gaivota2.position[0]) *
             (0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500 +
