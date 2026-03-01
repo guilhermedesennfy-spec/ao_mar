@@ -46,7 +46,7 @@ function Obj(image, x, y){
             this.position[0],
             this.position[1],
             this.image.width * scale,
-            this.image.height * scale
+            this.image.height * H
         );
     };
 
