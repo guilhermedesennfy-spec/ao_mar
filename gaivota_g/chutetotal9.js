@@ -25,7 +25,7 @@ const scale = (Math.min(scaleX*1.5, scaleY*1.5));
 function degrau(x){
     const e = Math.E ** (x * 0.2);
     const k = -((((x * 0.2) - 10) / e) ** 2);
-    return (Math.E ** k) * 1.2;//1.6;//1.8801;
+    return (Math.E ** k) * 9;//1.2;//1.6;//1.8801;
 }
 
 
