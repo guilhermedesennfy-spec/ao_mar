@@ -1,7 +1,7 @@
-// ======= DETECTAR MOBILE =======
+
 const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
 
-// ======= CONFIGURAÇÃO DO CANVAS E ESCALA =======
+
 const BASE_W = 800;
 const BASE_H = 2000;
 
