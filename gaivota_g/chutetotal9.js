@@ -21,14 +21,14 @@ const scaleY = H / BASE_H;
 
 const scale = (Math.min(scaleX*1.5, scaleY*1.5));
 
-// ======= FUNÇÃO DEGRAU ORIGINAL =======
+
 function degrau(x){
     const e = Math.E ** (x * 0.2);
     const k = -((((x * 0.2) - 10) / e) ** 2);
     return (Math.E ** k) * 1.8801;
 }
 
-// ======= OBJETO BASE (GAIVOTA, PEIXE, FUNDO) =======
+
 function Obj(image, x, y){
     this.image = new Image();
     this.image.src = image;
@@ -89,7 +89,7 @@ function Obj(image, x, y){
     };
 }
 
-// ======= MOVIMENTO DO FUNDO =======
+
 function move_bg(bg, bg2){
     const limite = -773 * scale;
 
@@ -106,7 +106,7 @@ function move_bg(bg, bg2){
     }
 }
 
-// ======= MOVIMENTO DO PEIXE =======
+
 function move_peixe(peixe, gaivota, gaivota2){
     const soma = gaivota.pontos + gaivota2.pontos;
 
@@ -135,7 +135,7 @@ function move_peixe(peixe, gaivota, gaivota2){
     }
 }
 
-// ======= INSTÂNCIAS =======
+
 var bg = new Obj("img_fundo/fundo2.png", 0, 0);
 var bg2 = new Obj("img_fundo/fundo2.png", 774, 0);
 var gaivota = new Obj("img_gaivota/gaivota1.png", 100, 200);
@@ -146,7 +146,7 @@ var placar = document.querySelector("h3");
 
 
 
-// ======= LOOP DO JOGO =======
+
 function jogo(){
     ctx.clearRect(0, 0, W, H);
     bg.drawing();
@@ -181,13 +181,13 @@ function jogo(){
     if (peixe.position[1] <= H * scale){
         gaivota2.move_gaivota2(
             (peixe.position[0] - gaivota2.position[0]) *
-            (0.0015 + (gaivota.pontos + gaivota2.pontos) / 3500 +
+            (0.0018 + (gaivota.pontos + gaivota2.pontos) / 3500 +
             (degrau((gaivota.pontos + gaivota2.pontos) / 2) *
             Math.abs(gaivota.pontos - gaivota2.pontos)) / 100) +
             gaivota2.position[0],
 
             (peixe.position[1] - gaivota2.position[1]) *
-            (0.0002 + (gaivota.pontos + gaivota2.pontos) / 2000) +
+            (0.00032 + (gaivota.pontos + gaivota2.pontos) / 2000) +
             gaivota2.position[1]
         );
     }
